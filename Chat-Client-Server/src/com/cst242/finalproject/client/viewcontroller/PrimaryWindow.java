@@ -31,6 +31,8 @@ public class PrimaryWindow extends JFrame implements ActionListener {
     private final StatusPanel statusPanel;
     private final PreferencesPanel prefPanel;
     private final SelectRoomsPanel srPanel;
+    private final CreateNewRoomPanel cnrPanel;
+    
     private User user;
     
     @SuppressWarnings("LeakingThisInConstructor")
@@ -102,6 +104,13 @@ public class PrimaryWindow extends JFrame implements ActionListener {
         this.srPanel.setVisible(false);
         framePanel.add(this.srPanel);
         
+        // Initialize the Create New Rooms panel
+        this.cnrPanel = new CreateNewRoomPanel();
+        this.cnrPanel.getBtnCreateRoom().addActionListener(this);
+        this.cnrPanel.getBtnCancel().addActionListener(this);
+        this.cnrPanel.setVisible(false);
+        framePanel.add(this.cnrPanel);
+        
     }
 
     @Override
@@ -111,14 +120,17 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             this.loginPanel.setVisible(true);
             this.loginPanel.getTxtLoginId().requestFocus();
             this.getRootPane().setDefaultButton(this.loginPanel.getBtnSubmit());
+            
         } else if (e.getActionCommand().equals("primaryRegister")) {
             this.primaryPanel.setVisible(false);
             this.regPanel.setVisible(true);
             this.regPanel.getTxtLoginId().requestFocus();
             this.getRootPane().setDefaultButton(this.regPanel.getBtnSubmit());
+            
         } else if (e.getActionCommand().equals("primaryExit")) {
             // Should close sockets and streams here before exit
             System.exit(200);
+            
         } else if (e.getActionCommand().equals("loginSubmit")) {
             // Check all fields are filled in with no white spaces            
             String loginId = loginPanel.getTxtLoginId().getText().trim();
@@ -144,6 +156,7 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             this.loginPanel.getTxtPassword().setText("");
             this.loginPanel.setVisible(false);
             this.primaryPanel.setVisible(true);
+            
         } else if (e.getActionCommand().equals("registerSubmit")) {
             // Check all fields are filled in with no white spaces
             String loginId = this.regPanel.getTxtLoginId().getText().trim();
@@ -175,15 +188,18 @@ public class PrimaryWindow extends JFrame implements ActionListener {
                 this.regPanel.setVisible(false);
                 this.primaryPanel.setVisible(true);
             }
+            
         } else if (e.getActionCommand().equals("registerCancel")) {
             this.clearRegistrationPanel();
             this.regPanel.setVisible(false);
             this.primaryPanel.setVisible(true);
+            
         } else if(e.getActionCommand().equals("statusPreferences")){
             // Load prefernces panel text fields except for pass and confirm with data from user object
             // Display preferences panel hide staus panel
             this.statusPanel.setVisible(false);
-            this.prefPanel.setVisible(true);            
+            this.prefPanel.setVisible(true);
+            
         } else if(e.getActionCommand().equals("statusSelectRooms")){
             // guery server for list of rooms
             // Add list of rooms to the list box in select rooms panel            
@@ -199,24 +215,44 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             // hide status panel show primary panel
             this.statusPanel.setVisible(false);
             this.primaryPanel.setVisible(true);
+            
         } else if(e.getActionCommand().equals("prefSubmit")){
             // check that all fields except pass and confirm are valid
             // check if pass text field has text if so check confirm and update user object password
             
             // send update message to the server
+            
         } else if(e.getActionCommand().equals("prefCancel")){
             // hide preferences panel show status panel
             this.prefPanel.setVisible(false);
             this.statusPanel.setVisible(true);
+            
         } else if (e.getActionCommand().equals("selectRoomsEnter")){
             // Remove room from the list and start new chat window
+            
         } else if (e.getActionCommand().equals("selectRoomsCancel")){
             // hide select rooms panel show status panel
             this.srPanel.setVisible(false);
             this.statusPanel.setVisible(true);
+            
         } else if (e.getActionCommand().equals("selectRoomsCreateNewRoom")){
             // Hide select rooms panel show create new room panel
+            this.srPanel.setVisible(false);
+            this.cnrPanel.setVisible(true);            
+            // set focus on text box
+            this.cnrPanel.getTxtRoomName().requestFocus();            
+            // set create new room button as the default button
+            this.getRootPane().setDefaultButton(this.cnrPanel.getBtnCreateRoom());
             
+        } else if(e.getActionCommand().equals("createNewRoomCreateRoom")){
+            
+        } else if(e.getActionCommand().equals("createNewRoomCancel")){
+            // clear text box 
+            this.cnrPanel.getTxtRoomName().setText("");
+            
+            // hide create new room panel and show select rooms panel
+            this.cnrPanel.setVisible(false);
+            this.srPanel.setVisible(true);
         }
     }
 
