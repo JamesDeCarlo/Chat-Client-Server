@@ -13,6 +13,10 @@ public class User {
     private String lastName;
     private String screenName;
 
+    public User(){
+        
+    }
+    
     /**
      * Create the base {@code User} object. The password given will be hashed. 
      * 
@@ -70,6 +74,10 @@ public class User {
      */
     public void setHashedPassword(String password) {
         this.hashedPassword = this.hashPassword(password);
+    }
+    
+    public void setHashedPassword(int hashedPassword){
+        this.hashedPassword = hashedPassword;
     }
 
     /**

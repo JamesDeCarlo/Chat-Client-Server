@@ -29,4 +29,8 @@ public class Helper {
         
         return true;
     }
+    
+    public static String[] splitString(String str){
+        return str.split("\\s+");
+    }
 }
