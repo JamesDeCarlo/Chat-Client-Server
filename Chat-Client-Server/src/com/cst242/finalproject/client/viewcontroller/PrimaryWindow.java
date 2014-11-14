@@ -33,6 +33,9 @@ public class PrimaryWindow extends JFrame implements ActionListener {
     private final SelectRoomsPanel srPanel;
     private final CreateNewRoomPanel cnrPanel;
     
+    private final static String HOST = "localhost";
+    
+    
     private User user;
     
     @SuppressWarnings("LeakingThisInConstructor")
@@ -229,7 +232,8 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             
         } else if (e.getActionCommand().equals("selectRoomsEnter")){
             // Remove room from the list and start new chat window
-            
+            JFrame chatWindow = new ChatWindow("Room Name Goes Here", HOST, 5, user);
+            chatWindow.setVisible(true);
         } else if (e.getActionCommand().equals("selectRoomsCancel")){
             // hide select rooms panel show status panel
             this.srPanel.setVisible(false);
