@@ -10,7 +10,7 @@ import javax.swing.JList;
 
 /**
  *
- * @author James
+ * @author James DeCarlo
  */
 public class SelectRoomsPanel extends javax.swing.JPanel {
 

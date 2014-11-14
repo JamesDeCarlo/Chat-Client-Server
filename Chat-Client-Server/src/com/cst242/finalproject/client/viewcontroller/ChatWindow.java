@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 
 /**
  *
- * @author James
+ * @author James DeCarlo
  */
 public class ChatWindow extends javax.swing.JFrame {
 

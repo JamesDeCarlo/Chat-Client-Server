@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 
 /**
  *
- * @author James
+ * @author James DeCarlo
  */
 public class StatusPanel extends javax.swing.JPanel {
 

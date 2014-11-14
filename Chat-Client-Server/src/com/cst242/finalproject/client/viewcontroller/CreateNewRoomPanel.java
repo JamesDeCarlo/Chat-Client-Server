@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 
 /**
  *
- * @author James
+ * @author James DeCarlo
  */
 public class CreateNewRoomPanel extends javax.swing.JPanel {
 
