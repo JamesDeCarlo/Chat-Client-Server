@@ -30,6 +30,7 @@ public class PrimaryWindow extends JFrame implements ActionListener {
     private final PrimaryPanel primaryPanel;
     private final StatusPanel statusPanel;
     private final PreferencesPanel prefPanel;
+    private final SelectRoomsPanel srPanel;
     private User user;
     
     @SuppressWarnings("LeakingThisInConstructor")
@@ -92,6 +93,15 @@ public class PrimaryWindow extends JFrame implements ActionListener {
         this.prefPanel.getBtnCancel().addActionListener(this);
         this.prefPanel.setVisible(false);
         framePanel.add(this.prefPanel);
+        
+        // Initialize the Select Rooms Panel
+        this.srPanel = new SelectRoomsPanel();
+        this.srPanel.getBtnEnter().addActionListener(this);
+        this.srPanel.getBtnCancel().addActionListener(this);
+        this.srPanel.getBtnCreateNewRoom().addActionListener(this);
+        this.srPanel.setVisible(false);
+        framePanel.add(this.srPanel);
+        
     }
 
     @Override
@@ -175,7 +185,13 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             this.statusPanel.setVisible(false);
             this.prefPanel.setVisible(true);            
         } else if(e.getActionCommand().equals("statusSelectRooms")){
+            // guery server for list of rooms
+            // Add list of rooms to the list box in select rooms panel            
+            
             //display select rooms panel hide status panel
+            this.statusPanel.setVisible(false);
+            this.srPanel.setVisible(true);
+            
         } else if(e.getActionCommand().equals("statusLogout")){
             // remove user from all chat rooms
             // close sockets and streams
@@ -192,6 +208,15 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             // hide preferences panel show status panel
             this.prefPanel.setVisible(false);
             this.statusPanel.setVisible(true);
+        } else if (e.getActionCommand().equals("selectRoomsEnter")){
+            // Remove room from the list and start new chat window
+        } else if (e.getActionCommand().equals("selectRoomsCancel")){
+            // hide select rooms panel show status panel
+            this.srPanel.setVisible(false);
+            this.statusPanel.setVisible(true);
+        } else if (e.getActionCommand().equals("selectRoomsCreateNewRoom")){
+            // Hide select rooms panel show create new room panel
+            
         }
     }
 
