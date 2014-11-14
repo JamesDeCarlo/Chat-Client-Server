@@ -45,6 +45,9 @@ public class PrimaryWindow extends JFrame implements ActionListener {
         this.setLocation(X, Y);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        // Lock Jframe size
+        this.setResizable(false);
+        
         // Create frame holder panel to set to box layout and hold all our panels
         JPanel framePanel = new JPanel();
         BoxLayout boxLayout = new BoxLayout(framePanel, BoxLayout.Y_AXIS);
