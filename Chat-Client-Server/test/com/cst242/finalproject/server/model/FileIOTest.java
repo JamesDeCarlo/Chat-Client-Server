@@ -65,6 +65,11 @@ public class FileIOTest {
         
         User user = new FileIO().loginUser("test212", 6969);
         
+        if(user == null){
+            fail("Failed to login user");
+            
+        }
+        
         int accountNumber = user.getAccountNumber();
         int hashedPassword = 6969;
         String firstName = "Jane";
@@ -94,6 +99,12 @@ public class FileIOTest {
         assertEquals(expResult, result);
         
         User user = new FileIO().loginUser("test212", 6969);
+        
+        if(user == null){
+            fail("Failed to login user");
+            
+        }
+        
         accountNumber = user.getAccountNumber();
         expResult = true;
         result = instance.deregister(accountNumber);
