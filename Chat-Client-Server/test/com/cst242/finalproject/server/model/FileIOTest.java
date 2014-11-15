@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author James
+ * @author James Decarlo
  */
 public class FileIOTest {
     
