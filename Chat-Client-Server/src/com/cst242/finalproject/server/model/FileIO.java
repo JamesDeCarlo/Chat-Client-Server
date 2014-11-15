@@ -24,7 +24,7 @@ public class FileIO implements FileIOInterface{
     }
 
     @Override
-    public boolean updateUser(String accountNumber, int hashedPassword, String firstName, String lastName, String screenName) {
+    public boolean updateUser(int accountNumber, int hashedPassword, String firstName, String lastName, String screenName) {
         return false;
     }
     

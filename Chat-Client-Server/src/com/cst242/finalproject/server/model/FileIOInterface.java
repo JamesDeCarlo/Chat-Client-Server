@@ -58,7 +58,7 @@ public interface FileIOInterface {
      * @param screenName Users screen name new or current
      * @return Returns true if updated successfully otherwise false;
      */
-    public boolean updateUser(String accountNumber, int hashedPassword, 
+    public boolean updateUser(int accountNumber, int hashedPassword, 
             String firstName, String lastName, String screenName);
     
 }
