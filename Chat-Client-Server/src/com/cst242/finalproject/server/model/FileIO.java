@@ -10,7 +10,7 @@ public class FileIO implements FileIOInterface{
 
     @Override
     public boolean register(String loginId, int hashedPassword, String firstName, String lastName, String screenName) {
-        return false;
+        return true;
     }
 
     @Override
