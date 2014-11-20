@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,6 +18,13 @@ public class Client {
     DataInputStream fromServer;
     DataOutputStream toServer;
 
+    /**
+     * Creates a new client object with the socket and data streams initialized.
+     * 
+     * @param host the host name of the server
+     * @param port the port number of the server
+     * @throws IOException if the server is not available
+     */
     public Client(String host, int port) throws IOException {
         this.serverSocket = new Socket(host, port);
         this.fromServer = new DataInputStream(this.serverSocket.getInputStream());
@@ -85,6 +93,36 @@ public class Client {
             return retUser;
         }
         return null;
+    }
+    
+    /**
+     * Updates the user information stored with the server.
+     * 
+     * @param user With all fields entered no {@code null} values allowed
+     * @return {@code true} if user was updated successfully.
+     */
+    public boolean updateUser(User user){
+        return false;
+    }
+    
+    /**
+     * Gets the list of registered rooms from the server
+     * 
+     * @return a list of rooms
+     */
+    public List<Room> getRegisteredRooms(){
+        return null;
+    }
+    
+    /**
+     * Creates a new room with the server. If the room name is not unique or 
+     * contains spaces will return {@code false}.
+     * 
+     * @param roomName the name of the room no spaces
+     * @return {@code true} if room created successfully.
+     */
+    public boolean createRoom(String roomName){
+        return false;
     }
     
     /**
