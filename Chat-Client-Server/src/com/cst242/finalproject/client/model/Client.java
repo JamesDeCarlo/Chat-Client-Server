@@ -83,7 +83,7 @@ public class Client {
         String returnMsg[] = Helper.splitString(this.fromServer.readUTF());
         
         if(returnMsg[0].equals("USER")){
-            User retUser = new User();
+            User retUser = new User();            
             retUser.setLoginId(user.getLoginId());
             retUser.setHashedPassword(user.getHashedPassword());
             retUser.setAccountNumber(Integer.parseInt(returnMsg[1]));

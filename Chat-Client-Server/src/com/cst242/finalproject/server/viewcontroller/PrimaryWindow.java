@@ -8,17 +8,10 @@ package com.cst242.finalproject.server.viewcontroller;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
 /**
@@ -33,12 +26,7 @@ public class PrimaryWindow extends JFrame {
     private final static int X = screenResolution.width / 2 - JWIDTH / 2, Y = screenResolution.height / 2 - JHEIGHT / 2;    
     
     // Declare Gui parts
-    private final JTextArea textLog;
-    private final JTextField textInput;
-
-    // I/O Streams
-    private ServerSocket serverSocket;
-    private Socket clientSocket;    
+    private final JTextArea textLog;       
 
     private static enum ReturnCode {
 
@@ -57,10 +45,7 @@ public class PrimaryWindow extends JFrame {
         this.setSize(JWIDTH, JHEIGHT);
         this.setLocation(X, Y);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        this.textInput = new JTextField();
-        this.textInput.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), "Enter Command"));
-        
+                        
         this.textLog = new JTextArea();
         this.textLog.setEditable(false);
         this.textLog.setLineWrap(true);
@@ -68,8 +53,7 @@ public class PrimaryWindow extends JFrame {
         
         JScrollPane jsp = new JScrollPane(this.textLog);
         
-        this.add(jsp, BorderLayout.CENTER);
-        this.add(textInput, BorderLayout.SOUTH);
+        this.add(jsp, BorderLayout.CENTER);        
 
         this.setIconImage(Toolkit.getDefaultToolkit().getImage("s_icon.png"));
         

@@ -1,12 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.cst242.finalproject.server;
 
+import com.cst242.finalproject.server.model.Server;
 import com.cst242.finalproject.server.viewcontroller.PrimaryWindow;
-import com.cst242.finalproject.server.viewcontroller.ServerThread;
 import java.awt.AWTException;
 import java.awt.Image;
 import java.awt.MenuItem;
@@ -18,21 +13,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
- * @author James
+ * @author James DeCarlo
  */
 public class ChatServer {
-    private static final int PORT = 9090;
-
-    private static ServerSocket serverSocket;
+    
+    
     
     /**
      * @param args the command line arguments
@@ -84,18 +72,10 @@ public class ChatServer {
                 pw.setVisible(false);
             }
             });   
-        }
+        }                 
         
-        try {
-            serverSocket = new ServerSocket(PORT);
-            pw.appendLog("Server started:  %s%n", new Date());
-            for(;;){
-                Socket clientSocket = serverSocket.accept();
-                new Thread(new ServerThread(clientSocket,pw)).start();
-            }
-        } catch (IOException ex) {
-            pw.appendLog("Server error exit and restart to try again:  %s%n", ex);
-            Logger.getLogger(ChatServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        //Start server
+        Server server = new Server(pw);
     }    
+    
 }
