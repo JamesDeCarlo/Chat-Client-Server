@@ -138,9 +138,17 @@ public class Client {
      * contains spaces will return {@code false}.
      * 
      * @param roomName the name of the room no spaces
+     * @param user a valid user object with login id filled in.
      * @return {@code true} if room created successfully.
+     * @throws java.io.IOException If server unavailable.
      */
-    public boolean createRoom(String roomName){
+    public boolean createRoom(String roomName, User user) throws IOException{
+        String msg = String.format("CREATE_ROOM %s %s", roomName, user.getLoginId());
+        
+        toServer.writeUTF(msg);
+        if(fromServer.readUTF().equals("SUCCESS")){
+            return true;
+        }
         return false;
     }
     
