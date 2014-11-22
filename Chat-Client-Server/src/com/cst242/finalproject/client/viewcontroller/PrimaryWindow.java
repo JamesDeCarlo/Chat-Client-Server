@@ -259,6 +259,11 @@ public class PrimaryWindow extends JFrame implements ActionListener {
 
         } else if (e.getActionCommand().equals("statusPreferences")) {
             // Load prefernces panel text fields except for pass and confirm with data from user object
+            this.prefPanel.getTxtLoginId().setText(user.getLoginId());
+            this.prefPanel.getTxtFirstName().setText(user.getFirstName());
+            this.prefPanel.getTxtLastName().setText(user.getLastName());
+            this.prefPanel.getTxtScreenName().setText(user.getScreenName());
+            
             // Display preferences panel hide staus panel
             this.statusPanel.setVisible(false);
             this.prefPanel.setVisible(true);
@@ -273,8 +278,10 @@ public class PrimaryWindow extends JFrame implements ActionListener {
 
         } else if (e.getActionCommand().equals("statusLogout")) {
             // remove user from all chat rooms
+            
             // close sockets and streams
-
+            client.close();
+            
             // hide status panel show primary panel
             this.statusPanel.setVisible(false);
             this.primaryPanel.setVisible(true);
