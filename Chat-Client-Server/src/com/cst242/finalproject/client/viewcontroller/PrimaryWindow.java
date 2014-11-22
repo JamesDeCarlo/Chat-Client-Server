@@ -152,14 +152,39 @@ public class PrimaryWindow extends JFrame implements ActionListener {
                 this.loginPanel.getTxtLoginId().requestFocus();
             } else {
                 // Check if loged in successfull if not display message box close connection
-                // if loged in keep server connection alive 
-                // Receive user information to create the user object
-                // clear login info show status panel
-                // Need to insert user data into status panel labels                
-                this.loginPanel.getTxtLoginId().setText("");
-                this.loginPanel.getTxtPassword().setText("");
-                this.loginPanel.setVisible(false);
-                this.statusPanel.setVisible(true);
+                user = new User();
+                user.setLoginId(loginId);
+                user.setHashedPassword(password);
+
+                try {
+                    client = new Client(HOST, PORT);
+
+                    user = client.login(user);
+
+                    if (user == null) {
+                        this.showAlertMsgBox("Login id and password combination not recognized.\nPlease try again.");
+                        this.loginPanel.getTxtLoginId().requestFocus();
+                        client.close();
+                    } else {
+                        this.loginPanel.getTxtLoginId().setText("");
+                        this.loginPanel.getTxtPassword().setText("");
+                        
+                        this.statusPanel.getLblGreeting().setText(String.format("Hello %s %s", user.getFirstName(), user.getLastName()));
+                        this.statusPanel.getLblScreenName().setText(String.format("Screen name: %s", user.getScreenName()));
+                        
+                        this.loginPanel.setVisible(false);
+                        this.statusPanel.setVisible(true);
+                    }
+                } catch (IOException ex) {
+                    this.showAlertMsgBox("Server not available.\n Please try again later");
+
+                    this.loginPanel.getTxtLoginId().setText("");
+                    this.loginPanel.getTxtPassword().setText("");
+
+                    this.loginPanel.setVisible(false);
+                    this.primaryPanel.setVisible(true);                    
+                }
+
             }
 
         } else if (e.getActionCommand().equals("loginCancel")) {

@@ -57,6 +57,8 @@ public class ServerThread extends Thread {
     public void processRequest(String[] request) {
         if (request[0].equals("REGISTER")) {
             this.register(request);
+        } else if(request[0].equals("LOGIN")){
+            this.login(request);
         }
     }
 
@@ -107,6 +109,8 @@ public class ServerThread extends Thread {
                     retmsg.append(user.getScreenName());
                     
                     toClient.writeUTF(retmsg.toString());
+                    
+                    window.appendLog("User %s loged in to the chat server: %s%n", user.getLoginId(), new Date());
                 }
             }
         } catch (IOException e) {
