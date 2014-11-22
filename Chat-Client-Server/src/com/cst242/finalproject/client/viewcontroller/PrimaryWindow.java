@@ -10,7 +10,10 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -45,7 +48,9 @@ public class PrimaryWindow extends JFrame implements ActionListener {
     private User user;
 
     private List<Room> rooms ;
-            
+    private DefaultListModel listModel;
+    private List<JFrame> chatWindows;
+    
     @SuppressWarnings("LeakingThisInConstructor")
     public PrimaryWindow() {
         super("Chat Client");
@@ -125,6 +130,9 @@ public class PrimaryWindow extends JFrame implements ActionListener {
         this.cnrPanel.setVisible(false);
         framePanel.add(this.cnrPanel);
 
+        
+        // Initialize variables
+        this.chatWindows = new ArrayList<>();
     }
 
     @Override
@@ -302,9 +310,75 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             this.statusPanel.setVisible(true);
 
         } else if (e.getActionCommand().equals("selectRoomsEnter")) {
+            // Check if something is selected if not display dialog
+            if(this.srPanel.getLstSelectRoom().getSelectedIndex() == -1){
+                this.showAlertMsgBox("You must select a room first");
+                return;
+            }
+            
             // Remove room from the list and start new chat window
-            JFrame chatWindow = new ChatWindow("Room Name Goes Here", HOST, 5, user);
+            String selected = (String)this.srPanel.getLstSelectRoom().getSelectedValue();
+            Room room = null;
+            
+            for(Room r: this.rooms){
+                if(r.getRoomName().equals(selected)){
+                    room = r;
+                }
+            }
+            
+            @SuppressWarnings("null")
+            JFrame chatWindow = new ChatWindow(room.getRoomName(), HOST, room.getPort(), user);
+            
+            chatWindow.addWindowListener(new WindowListener() {
+
+                @Override
+                public void windowOpened(WindowEvent e) {
+                    
+                }
+
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    
+                }
+
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    for(int i = 0; i < chatWindows.size(); i++){
+                        if(!chatWindows.get(i).isShowing()){
+                            chatWindows.remove(i);
+                        }
+                    }
+                    
+                    // upadate the list
+                    updateRoomsList();
+                }
+
+                @Override
+                public void windowIconified(WindowEvent e) {
+                    
+                }
+
+                @Override
+                public void windowDeiconified(WindowEvent e) {
+                    
+                }
+
+                @Override
+                public void windowActivated(WindowEvent e) {
+                    
+                }
+
+                @Override
+                public void windowDeactivated(WindowEvent e) {
+                    
+                }
+            });
+            this.chatWindows.add(chatWindow);
+            
             chatWindow.setVisible(true);
+            
+            this.updateRoomsList();
+            
         } else if (e.getActionCommand().equals("selectRoomsCancel")) {
             // hide select rooms panel show status panel
             this.srPanel.setVisible(false);
@@ -361,11 +435,19 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             rooms = client.getRegisteredRooms(user);
             
             // Create default list model and populate
-            DefaultListModel listModel = new DefaultListModel();
+            listModel = new DefaultListModel();
             
-            for(Room room: rooms){
+            for(Room room: rooms){                
                 listModel.addElement(room.getRoomName());
             }                        
+            
+            for(int i = 0; i < listModel.getSize(); i++){
+                for(JFrame cw: this.chatWindows){
+                    if(cw.getTitle().equals(listModel.get(i))){
+                        listModel.remove(i);
+                    }
+                }
+            }
             
             this.srPanel.getLstSelectRoom().setModel(listModel);
             
