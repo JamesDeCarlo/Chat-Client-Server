@@ -139,6 +139,8 @@ public class ServerThread extends Thread {
             
             toClient.writeUTF("END");
             
+            window.appendLog("Sent rooms list to User %s: %s%n", request[1], new Date());
+            
         } catch (IOException e) {
             window.appendLog("Failed to send room list to user %s: %s%n", request[1], new Date());            
         }

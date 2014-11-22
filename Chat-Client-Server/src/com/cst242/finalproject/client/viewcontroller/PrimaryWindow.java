@@ -2,6 +2,7 @@ package com.cst242.finalproject.client.viewcontroller;
 
 import com.cst242.finalproject.client.model.Client;
 import com.cst242.finalproject.client.model.Helper;
+import com.cst242.finalproject.client.model.Room;
 import com.cst242.finalproject.client.model.User;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -10,10 +11,10 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -43,6 +44,8 @@ public class PrimaryWindow extends JFrame implements ActionListener {
     private Client client;
     private User user;
 
+    private List<Room> rooms ;
+            
     @SuppressWarnings("LeakingThisInConstructor")
     public PrimaryWindow() {
         super("Chat Client");
@@ -168,10 +171,10 @@ public class PrimaryWindow extends JFrame implements ActionListener {
                     } else {
                         this.loginPanel.getTxtLoginId().setText("");
                         this.loginPanel.getTxtPassword().setText("");
-                        
+
                         this.statusPanel.getLblGreeting().setText(String.format("Hello %s %s", user.getFirstName(), user.getLastName()));
                         this.statusPanel.getLblScreenName().setText(String.format("Screen name: %s", user.getScreenName()));
-                        
+
                         this.loginPanel.setVisible(false);
                         this.statusPanel.setVisible(true);
                     }
@@ -182,7 +185,7 @@ public class PrimaryWindow extends JFrame implements ActionListener {
                     this.loginPanel.getTxtPassword().setText("");
 
                     this.loginPanel.setVisible(false);
-                    this.primaryPanel.setVisible(true);                    
+                    this.primaryPanel.setVisible(true);
                 }
 
             }
@@ -219,7 +222,7 @@ public class PrimaryWindow extends JFrame implements ActionListener {
                 regUser.setLastName(lastName);
                 regUser.setScreenName(screenName);
 
-                Boolean result = false;
+                Boolean result;
 
                 try {
                     // open connection to the server
@@ -263,25 +266,27 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             this.prefPanel.getTxtFirstName().setText(user.getFirstName());
             this.prefPanel.getTxtLastName().setText(user.getLastName());
             this.prefPanel.getTxtScreenName().setText(user.getScreenName());
-            
+
             // Display preferences panel hide staus panel
             this.statusPanel.setVisible(false);
             this.prefPanel.setVisible(true);
 
         } else if (e.getActionCommand().equals("statusSelectRooms")) {
-            // guery server for list of rooms
-            // Add list of rooms to the list box in select rooms panel            
-
+            
+            
             //display select rooms panel hide status panel
             this.statusPanel.setVisible(false);
             this.srPanel.setVisible(true);
 
+            // Add list of rooms to the list box in select rooms panel            
+            this.updateRoomsList();            
+
         } else if (e.getActionCommand().equals("statusLogout")) {
             // remove user from all chat rooms
-            
+
             // close sockets and streams
             client.close();
-            
+
             // hide status panel show primary panel
             this.statusPanel.setVisible(false);
             this.primaryPanel.setVisible(true);
@@ -323,6 +328,9 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             // hide create new room panel and show select rooms panel
             this.cnrPanel.setVisible(false);
             this.srPanel.setVisible(true);
+            
+            // updated the room list in case another user has added a room
+            this.updateRoomsList();
         }
     }
 
@@ -345,5 +353,28 @@ public class PrimaryWindow extends JFrame implements ActionListener {
 
     private void showPassConfirmAlertMsgBox() {
         JOptionPane.showMessageDialog(this, "Your passwords do not match.\nPlease check your input.");
+    }
+
+    private void updateRoomsList() {
+        try {
+            // query the server for room list
+            rooms = client.getRegisteredRooms(user);
+            
+            // Create default list model and populate
+            DefaultListModel listModel = new DefaultListModel();
+            
+            for(Room room: rooms){
+                listModel.addElement(room.getRoomName());
+            }                        
+            
+            this.srPanel.getLstSelectRoom().setModel(listModel);
+            
+        } catch (IOException e) {
+            // server disconected go back to the login screen
+            this.showAlertMsgBox("Server not available.\n Please try again later");
+            this.srPanel.setVisible(false);
+            this.primaryPanel.setVisible(true);
+            client.close();
+        }
     }
 }
