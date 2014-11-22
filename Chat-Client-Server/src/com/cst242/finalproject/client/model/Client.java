@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -108,10 +109,28 @@ public class Client {
     /**
      * Gets the list of registered rooms from the server
      * 
+     * @param user
      * @return a list of rooms
+     * @throws java.io.IOException
      */
-    public List<Room> getRegisteredRooms(){
-        return null;
+    public List<Room> getRegisteredRooms(User user) throws IOException{
+        String msg = String.format("ROOMS %s", user.getLoginId());
+        toServer.writeUTF(msg);
+        
+        List<Room> rooms = new ArrayList<>();
+        
+        for(;;){
+            String[] retMsg = Helper.splitString(fromServer.readUTF());
+            if(retMsg[0].equals("FAILED")){
+                return null;
+            }
+            
+            if(retMsg[0].equals("ROOM")){
+                rooms.add(new Room(retMsg[1], Integer.parseInt(retMsg[2])));
+            } else{
+                return rooms;
+            }        
+        }                
     }
     
     /**
