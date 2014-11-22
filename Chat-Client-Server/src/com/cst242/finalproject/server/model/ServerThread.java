@@ -14,10 +14,11 @@ import java.util.List;
  * @author James DeCarlo
  */
 public class ServerThread extends Thread {
+
     PrimaryWindow window;
-    
+
     List<ServerRoom> rooms;
-    
+
     Socket clientSocket;
     DataInputStream fromClient;
     DataOutputStream toClient;
@@ -25,7 +26,7 @@ public class ServerThread extends Thread {
     public ServerThread(Socket clientSocket, PrimaryWindow window) {
         this.clientSocket = clientSocket;
         this.window = window;
-        
+
         // Start default rooms and add to list array
         rooms = new ArrayList<>();
         rooms.add(new ServerRoom("All_Chat", 9091, window));
@@ -33,9 +34,7 @@ public class ServerThread extends Thread {
         rooms.add(new ServerRoom("Computer_Science", 9093, window));
         rooms.add(new ServerRoom("Conspiracy", 9094, window));
     }
-    
-    
-    
+
     @Override
     public void run() {
         try {
@@ -50,21 +49,23 @@ public class ServerThread extends Thread {
             }
 
         } catch (IOException ex) {
-            window.appendLog("Client disconected : %s%n", new Date());                        
+            window.appendLog("Client disconected : %s%n", new Date());
         }
     }
 
     public void processRequest(String[] request) {
         if (request[0].equals("REGISTER")) {
             this.register(request);
-        } else if(request[0].equals("LOGIN")){
+        } else if (request[0].equals("LOGIN")) {
             this.login(request);
+        } else if(request[0].equals("ROOMS")){
+            this.getRooms(request);
         }
     }
 
     /**
      * Registers a new user
-     * 
+     *
      * @param request
      */
     public void register(String[] request) {
@@ -84,7 +85,7 @@ public class ServerThread extends Thread {
 
     /**
      * Logs a user in to the server
-     * 
+     *
      * @param request
      */
     public void login(String[] request) {
@@ -92,10 +93,10 @@ public class ServerThread extends Thread {
         try {
             if (request.length != 3) {
                 toClient.writeUTF("FAILED");
-            } else{
+            } else {
                 User user = fileIO.loginUser(request[1], Integer.parseInt(request[2]));
-                
-                if(user == null){
+
+                if (user == null) {
                     toClient.writeUTF("FAILED");
                 } else {
                     StringBuilder retmsg = new StringBuilder();
@@ -107,14 +108,39 @@ public class ServerThread extends Thread {
                     retmsg.append(user.getLastName());
                     retmsg.append(" ");
                     retmsg.append(user.getScreenName());
-                    
+
                     toClient.writeUTF(retmsg.toString());
-                    
+
                     window.appendLog("User %s loged in to the chat server: %s%n", user.getLoginId(), new Date());
                 }
             }
         } catch (IOException e) {
             window.appendLog("Failed to send login message to client : %s", new Date());
+        }
+    }
+
+    /**
+     * Sends the list of available rooms to the user.
+     *
+     * @param request
+     */
+    public void getRooms(String[] request) {
+        
+        try {
+            if(request.length != 2){
+                toClient.writeUTF("FAILED");
+                return;
+            }
+            
+            for (ServerRoom room : this.rooms) {
+                String msg = String.format("ROOM %s %d", room.getRoomName(), room.getPort());
+                toClient.writeUTF(msg);
+            }
+            
+            toClient.writeUTF("END");
+            
+        } catch (IOException e) {
+            window.appendLog("Failed to send room list to user %s: %s%n", request[1], new Date());            
         }
     }
 }
