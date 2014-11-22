@@ -20,7 +20,9 @@ public class FileIO implements FileIOInterface{
 
     @Override
     public User loginUser(String loginId, int hashedPassword) {
-        return null;
+        User user = new User(1001, "JohnDoe",6969,"John", "Doe", "SomeGuy");
+        
+        return user;
     }
 
     @Override

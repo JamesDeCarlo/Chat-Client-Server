@@ -60,6 +60,11 @@ public class ServerThread extends Thread {
         }
     }
 
+    /**
+     * Registers a new user
+     * 
+     * @param request
+     */
     public void register(String[] request) {
         FileIO fileIO = new FileIO();
 
@@ -75,6 +80,11 @@ public class ServerThread extends Thread {
         }
     }
 
+    /**
+     * Logs a user in to the server
+     * 
+     * @param request
+     */
     public void login(String[] request) {
         FileIO fileIO = new FileIO();
         try {
