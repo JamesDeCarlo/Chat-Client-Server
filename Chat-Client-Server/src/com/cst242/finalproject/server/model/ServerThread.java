@@ -168,7 +168,11 @@ public class ServerThread extends Thread {
                 }
 
                 // room is unique create room and send success to client
-                this.rooms.add(new ServerRoom(request[1], rooms.get(rooms.size() - 1).getPort() + 1, window));
+                
+                ServerRoom room = new ServerRoom(request[1], rooms.get(rooms.size() - 1).getPort() + 1, window);
+                //room.start();
+                
+                this.rooms.add(room);
                 toClient.writeUTF("SUCCESS");
                 window.appendLog("New room %s created by user %s: %s%n", request[1], request[2], new Date());
 
