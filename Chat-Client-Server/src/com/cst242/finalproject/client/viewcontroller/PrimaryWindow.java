@@ -15,6 +15,8 @@ import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -394,7 +396,29 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             this.getRootPane().setDefaultButton(this.cnrPanel.getBtnCreateRoom());
 
         } else if (e.getActionCommand().equals("createNewRoomCreateRoom")) {
-
+            // check if input is valid
+            if(!Helper.validateInput(this.cnrPanel.getTxtRoomName().getText().trim())){
+                this.showInputAlertMsgBox();
+                this.cnrPanel.getTxtRoomName().requestFocus();
+                return;
+            }
+            
+            try {
+                if(client.createRoom(this.cnrPanel.getTxtRoomName().getText().trim(), user)){
+                    this.showAlertMsgBox("Room Created Successfully.");
+                    this.cnrPanel.setVisible(false);
+                    this.srPanel.setVisible(true);
+                    this.updateRoomsList();
+                } else {
+                    this.showAlertMsgBox("Room name is not unique try a diffrent name.");
+                    this.cnrPanel.getTxtRoomName().requestFocus();
+                }
+            } catch (IOException ex) {
+               this.showAlertMsgBox("Server not available.\n Please try again later");
+               this.cnrPanel.setVisible(false);
+               this.primaryPanel.setVisible(true);
+            }
+            
         } else if (e.getActionCommand().equals("createNewRoomCancel")) {
             // clear text box 
             this.cnrPanel.getTxtRoomName().setText("");

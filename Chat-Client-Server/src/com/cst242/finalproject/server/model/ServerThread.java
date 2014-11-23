@@ -122,7 +122,7 @@ public class ServerThread extends Thread {
                 }
             }
         } catch (IOException e) {
-            window.appendLog("Failed to send login message to client : %s", new Date());
+            window.appendLog("Failed to send login message to client : %s%n", new Date());
         }
     }
 
@@ -176,10 +176,10 @@ public class ServerThread extends Thread {
                 // room is unique create room and send success to client
                 this.rooms.add(new ServerRoom(request[1], rooms.get(rooms.size() - 1).getPort() + 1, window));
                 toClient.writeUTF("SUCCESS");
-                window.appendLog("New room %s created by user %s: %s", request[1], request[2], new Date());
+                window.appendLog("New room %s created by user %s: %s%n", request[1], request[2], new Date());
 
             } catch (IOException e) {
-                window.appendLog("Failed to send create room message: %s", new Date());
+                window.appendLog("Failed to send create room message: %s%n", new Date());
             }
         }
     }
