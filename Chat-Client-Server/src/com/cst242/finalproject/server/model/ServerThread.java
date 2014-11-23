@@ -53,13 +53,20 @@ public class ServerThread extends Thread {
         }
     }
 
+    /**
+     * Process the clients request and calls the corresponding method.
+     * 
+     * @param request
+     */
     public void processRequest(String[] request) {
         if (request[0].equals("REGISTER")) {
             this.register(request);
         } else if (request[0].equals("LOGIN")) {
             this.login(request);
-        } else if(request[0].equals("ROOMS")){
+        } else if (request[0].equals("ROOMS")) {
             this.getRooms(request);
+        } else if (request[0].equals("CREATE_ROOM")){
+            this.createRoom(request);
         }
     }
 
@@ -125,24 +132,55 @@ public class ServerThread extends Thread {
      * @param request
      */
     public void getRooms(String[] request) {
-        
+
         try {
-            if(request.length != 2){
+            if (request.length != 2) {
                 toClient.writeUTF("FAILED");
                 return;
             }
-            
+
             for (ServerRoom room : this.rooms) {
                 String msg = String.format("ROOM %s %d", room.getRoomName(), room.getPort());
                 toClient.writeUTF(msg);
             }
-            
+
             toClient.writeUTF("END");
-            
+
             window.appendLog("Sent rooms list to User %s: %s%n", request[1], new Date());
-            
+
         } catch (IOException e) {
-            window.appendLog("Failed to send room list to user %s: %s%n", request[1], new Date());            
+            window.appendLog("Failed to send room list to user %s: %s%n", request[1], new Date());
+        }
+    }
+
+    /**
+     * Checks if room name is unique if so creates new chat room
+     * 
+     * @param request
+     */
+    public void createRoom(String[] request) {
+        synchronized (this) {
+            try {
+                if (request.length != 3) {
+                    toClient.writeUTF("FAILED");
+                    return;
+                }
+
+                for (ServerRoom room : rooms) {
+                    if (room.getRoomName().toLowerCase().equals(request[1].toLowerCase())) {
+                        toClient.writeUTF("FAILED");
+                        return;
+                    }
+                }
+
+                // room is unique create room and send success to client
+                this.rooms.add(new ServerRoom(request[1], rooms.get(rooms.size() - 1).getPort() + 1, window));
+                toClient.writeUTF("SUCCESS");
+                window.appendLog("New room %s created by user %s: %s", request[1], request[2], new Date());
+
+            } catch (IOException e) {
+                window.appendLog("Failed to send create room message: %s", new Date());
+            }
         }
     }
 }
