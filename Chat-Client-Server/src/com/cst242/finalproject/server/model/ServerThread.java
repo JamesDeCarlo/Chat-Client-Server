@@ -8,6 +8,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -169,8 +171,10 @@ public class ServerThread extends Thread {
 
                 // room is unique create room and send success to client
                 
-                ServerRoom room = new ServerRoom(request[1], rooms.get(rooms.size() - 1).getPort() + 1, window);
-                //room.start();
+                ServerRoom room = new ServerRoom(request[1], rooms.get(rooms.size() - 1).getPort() + 1, window);                                
+                room.start();
+                
+                this.sleep();
                 
                 this.rooms.add(room);
                 toClient.writeUTF("SUCCESS");
@@ -179,6 +183,14 @@ public class ServerThread extends Thread {
             } catch (IOException e) {
                 window.appendLog("Failed to send create room message: %s%n", new Date());
             }
+        }
+    }
+    
+    private void sleep(){
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
