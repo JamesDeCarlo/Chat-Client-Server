@@ -37,7 +37,7 @@ public class ServerRoomThread extends Thread {
             fromClient = new DataInputStream(clientSocket.getInputStream());
             toClient = new DataOutputStream(clientSocket.getOutputStream());
         } catch (IOException e) {
-            
+
             // remove thread from list and close streams
             synchronized (this) {
                 for (int i = 0; i < roomThreads.length; i++) {
@@ -46,7 +46,7 @@ public class ServerRoomThread extends Thread {
                     }
                 }
             }
-            
+
             window.appendLog("Failed to create client data streams in chat room: %s", new Date());
             try {
                 clientSocket.close();
@@ -60,15 +60,15 @@ public class ServerRoomThread extends Thread {
         try {
             for (;;) {
                 String msg = fromClient.readUTF();
-                
-                synchronized(this){
-                    for(int i = 0; i < roomThreads.length; i++){
-                        if(roomThreads[i] != null){
+
+                synchronized (this) {
+                    for (int i = 0; i < roomThreads.length; i++) {
+                        if (roomThreads[i] != null) {
                             roomThreads[i].toClient.writeUTF(msg);
                         }
                     }
                 }
-                
+
             }
         } catch (IOException ex) {
             // remove thread from list and close streams
@@ -90,4 +90,13 @@ public class ServerRoomThread extends Thread {
 
     }
 
+    public void shutDown() {
+        try {
+            this.fromClient.close();
+            this.toClient.close();
+            this.clientSocket.close();
+        } catch (IOException e) {
+            // do nothing
+        }
+    }
 }

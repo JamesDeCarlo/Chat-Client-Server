@@ -23,10 +23,10 @@ public class PrimaryWindow extends JFrame {
     // Gui Constants
     private final static int JWIDTH = 800, JHEIGHT = 500;
     private final static Dimension screenResolution = Toolkit.getDefaultToolkit().getScreenSize();
-    private final static int X = screenResolution.width / 2 - JWIDTH / 2, Y = screenResolution.height / 2 - JHEIGHT / 2;    
-    
+    private final static int X = screenResolution.width / 2 - JWIDTH / 2, Y = screenResolution.height / 2 - JHEIGHT / 2;
+
     // Declare Gui parts
-    private final JTextArea textLog;       
+    private final JTextArea textLog;
 
     private static enum ReturnCode {
 
@@ -38,34 +38,32 @@ public class PrimaryWindow extends JFrame {
         }
 
     };
-    
+
     public PrimaryWindow() {
         // Set up JFrame
         super("Chat Server");
         this.setSize(JWIDTH, JHEIGHT);
         this.setLocation(X, Y);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                        
+
         this.textLog = new JTextArea();
         this.textLog.setEditable(false);
         this.textLog.setLineWrap(true);
         this.textLog.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), "Chat Server Log Window"));
-        
+
         JScrollPane jsp = new JScrollPane(this.textLog);
-        
-        this.add(jsp, BorderLayout.CENTER);        
+
+        this.add(jsp, BorderLayout.CENTER);
 
         this.setIconImage(Toolkit.getDefaultToolkit().getImage("s_icon.png"));
-        
-        
-        
+
     }
 
-    public void appendLog(String formatedString, Object... args){
-        this.textLog.append(String.format(formatedString, args));
-        
-        this.textLog.setCaretPosition(textLog.getDocument().getLength());
-    }                    
-        
-        
+    public void appendLog(String formatedString, Object... args) {
+        synchronized (this) {
+            this.textLog.append(String.format(formatedString, args));
+            this.textLog.setCaretPosition(textLog.getDocument().getLength());
+        }
+    }
+
 }

@@ -15,24 +15,18 @@ import java.util.List;
  */
 public class ServerThread extends Thread {
 
-    PrimaryWindow window;
+    private final PrimaryWindow window;
 
-    List<ServerRoom> rooms;
+    private final List<ServerRoom> rooms;
 
-    Socket clientSocket;
-    DataInputStream fromClient;
-    DataOutputStream toClient;
+    private final Socket clientSocket;
+    private DataInputStream fromClient;
+    private DataOutputStream toClient;
 
-    public ServerThread(Socket clientSocket, PrimaryWindow window) {
+    public ServerThread(Socket clientSocket, PrimaryWindow window, List<ServerRoom> rooms) {
         this.clientSocket = clientSocket;
         this.window = window;
-
-        // Start default rooms and add to list array
-        rooms = new ArrayList<>();
-        rooms.add(new ServerRoom("All_Chat", 9091, window));
-        rooms.add(new ServerRoom("Everything_Java", 9092, window));
-        rooms.add(new ServerRoom("Computer_Science", 9093, window));
-        rooms.add(new ServerRoom("Conspiracy", 9094, window));
+        this.rooms = rooms;        
     }
 
     @Override

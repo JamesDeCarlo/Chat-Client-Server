@@ -15,8 +15,6 @@ import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -51,7 +49,7 @@ public class PrimaryWindow extends JFrame implements ActionListener {
 
     private List<Room> rooms ;
     private DefaultListModel listModel;
-    private List<JFrame> chatWindows;
+    private final List<JFrame> chatWindows;
     
     @SuppressWarnings("LeakingThisInConstructor")
     public PrimaryWindow() {
@@ -293,7 +291,10 @@ public class PrimaryWindow extends JFrame implements ActionListener {
 
         } else if (e.getActionCommand().equals("statusLogout")) {
             // remove user from all chat rooms
-
+            for(JFrame win: this.chatWindows){
+                win.dispose();
+            }
+            
             // close sockets and streams
             client.close();
 
@@ -406,6 +407,8 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             try {
                 if(client.createRoom(this.cnrPanel.getTxtRoomName().getText().trim(), user)){
                     this.showAlertMsgBox("Room Created Successfully.");
+                    
+                    this.cnrPanel.getTxtRoomName().setText("");                    
                     this.cnrPanel.setVisible(false);
                     this.srPanel.setVisible(true);
                     this.updateRoomsList();
