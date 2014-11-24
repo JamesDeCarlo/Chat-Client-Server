@@ -20,16 +20,12 @@ public class Server implements WindowListener {
 
     private static final int PORT = 9090;
 
-    private final PrimaryWindow window;
-
     private ServerSocket serverSocket;    
     
     private List<ServerRoom> rooms;
 
     @SuppressWarnings({"CallToThreadStartDuringObjectConstruction", "LeakingThisInConstructor"})
-    public Server(PrimaryWindow window) {
-        this.window = window;
-        
+    public Server(PrimaryWindow window) {                
         try {
             // add window listener to shutdown threads when closing
             window.addWindowListener(this);
