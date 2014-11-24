@@ -33,24 +33,27 @@ public class ClientRoom {
         this.serverSocket = new Socket(host, port);
         this.fromServer = new DataInputStream(this.serverSocket.getInputStream());
         this.toServer = new DataOutputStream(this.serverSocket.getOutputStream());
+        this.sendMessage("Joined the room!!!");
     }
     
     /**
      * Sends a chat message to the server
      * 
      * @param msg the message to be sent
+     * @throws java.io.IOException
      */
-    public void sendMessage(String msg){
-        
+    public final void sendMessage(String msg) throws IOException{
+        this.toServer.writeUTF(String.format("MESSAGE %s %s", user.getScreenName(), msg));
     }
     
     /**
      * Receives a chat message from the server
      * 
-     * @return the message formated with time stamp
+     * @return the message from the server needs to be formated
+     * @throws java.io.IOException
      */
-    public String receiveMessage(){
-        return null;
+    public String receiveMessage() throws IOException{
+        return this.fromServer.readUTF();
     }
     
      /**
