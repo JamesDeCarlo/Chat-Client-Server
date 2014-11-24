@@ -5,7 +5,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,7 +27,7 @@ public class ServerThread extends Thread {
     public ServerThread(Socket clientSocket, PrimaryWindow window, List<ServerRoom> rooms) {
         this.clientSocket = clientSocket;
         this.window = window;
-        this.rooms = rooms;        
+        this.rooms = rooms;
     }
 
     @Override
@@ -46,12 +45,38 @@ public class ServerThread extends Thread {
 
         } catch (IOException ex) {
             window.appendLog("Client disconected : %s%n", new Date());
+            
+            // close streams
+            try {
+                if (fromClient != null) {
+                    fromClient.close();
+                }                
+            } catch (IOException e) {
+                //do nothing
+            }
+            
+            try{
+            if (toClient != null) {
+                    toClient.close();
+                }
+            } catch (IOException e){
+                // do nothing
+            }
+            
+            
+            try{
+                if (clientSocket != null) {
+                    clientSocket.close();
+                }
+            } catch(IOException e){
+                //do nothing
+            }
         }
     }
 
     /**
      * Process the clients request and calls the corresponding method.
-     * 
+     *
      * @param request
      */
     public void processRequest(String[] request) {
@@ -61,7 +86,7 @@ public class ServerThread extends Thread {
             this.login(request);
         } else if (request[0].equals("ROOMS")) {
             this.getRooms(request);
-        } else if (request[0].equals("CREATE_ROOM")){
+        } else if (request[0].equals("CREATE_ROOM")) {
             this.createRoom(request);
         }
     }
@@ -151,7 +176,7 @@ public class ServerThread extends Thread {
 
     /**
      * Checks if room name is unique if so creates new chat room
-     * 
+     *
      * @param request
      */
     public void createRoom(String[] request) {
@@ -170,12 +195,11 @@ public class ServerThread extends Thread {
                 }
 
                 // room is unique create room and send success to client
-                
-                ServerRoom room = new ServerRoom(request[1], rooms.get(rooms.size() - 1).getPort() + 1, window);                                
+                ServerRoom room = new ServerRoom(request[1], rooms.get(rooms.size() - 1).getPort() + 1, window);
                 room.start();
-                
+
                 this.sleep();
-                
+
                 this.rooms.add(room);
                 toClient.writeUTF("SUCCESS");
                 window.appendLog("New room %s created by user %s: %s%n", request[1], request[2], new Date());
@@ -185,8 +209,8 @@ public class ServerThread extends Thread {
             }
         }
     }
-    
-    private void sleep(){
+
+    private void sleep() {
         try {
             Thread.sleep(100);
         } catch (InterruptedException ex) {
