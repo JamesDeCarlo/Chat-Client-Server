@@ -1,5 +1,7 @@
 package com.cst242.finalproject.client.model;
 
+import java.util.Date;
+
 /**
  * This class is a assortment of static methods for validations and various
  * other methods as needed.
@@ -32,5 +34,16 @@ public class Helper {
     
     public static String[] splitString(String str){
         return str.split("\\s+");
+    }
+    
+    /**
+     * Creates a timestamp in the following format (hh:mm:ss).
+     * 
+     * @return the current timestamp
+     */
+    public static String currentTimeStamp(){        
+        Date now = new Date();
+                        
+        return String.format("(2%d:2%d:2%d)", now.getHours(), now.getMinutes(), now.getSeconds());
     }
 }
