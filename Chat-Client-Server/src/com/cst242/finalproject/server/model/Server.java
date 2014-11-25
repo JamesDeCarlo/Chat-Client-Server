@@ -56,7 +56,7 @@ public class Server implements WindowListener {
 
             ServerRoom room4 = new ServerRoom("Conspiracy", 9094, window);
             room4.start();
-            rooms.add(room);
+            rooms.add(room4);
 
         } catch (IOException ex) {
             window.appendLog("Server error exit and restart to try again:  %s%n", ex);

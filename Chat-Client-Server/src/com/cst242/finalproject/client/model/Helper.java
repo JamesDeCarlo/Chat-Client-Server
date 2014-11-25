@@ -44,6 +44,6 @@ public class Helper {
     public static String currentTimeStamp(){        
         Date now = new Date();
                         
-        return String.format("(2%d:2%d:2%d)", now.getHours(), now.getMinutes(), now.getSeconds());
+        return String.format("(%02d:%02d:%02d)", now.getHours(), now.getMinutes(), now.getSeconds());
     }
 }
