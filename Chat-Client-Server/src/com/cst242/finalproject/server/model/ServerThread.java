@@ -141,6 +141,7 @@ public class ServerThread extends Thread {
 
                     window.appendLog("User %s loged in to the chat server: %s%n", user.getLoginId(), new Date());
                 }
+                toClient.flush();
             }
         } catch (IOException e) {
             window.appendLog("Failed to send login message to client : %s%n", new Date());
@@ -157,16 +158,18 @@ public class ServerThread extends Thread {
         try {
             if (request.length != 2) {
                 toClient.writeUTF("FAILED");
+                toClient.flush();
                 return;
             }
 
             for (ServerRoom room : this.rooms) {
                 String msg = String.format("ROOM %s %d", room.getRoomName(), room.getPort());
                 toClient.writeUTF(msg);
+                toClient.flush();
             }
 
             toClient.writeUTF("END");
-
+            toClient.flush();
             window.appendLog("Sent rooms list to User %s: %s%n", request[1], new Date());
 
         } catch (IOException e) {
@@ -184,12 +187,14 @@ public class ServerThread extends Thread {
             try {
                 if (request.length != 3) {
                     toClient.writeUTF("FAILED");
+                    toClient.flush();
                     return;
                 }
 
                 for (ServerRoom room : rooms) {
                     if (room.getRoomName().toLowerCase().equals(request[1].toLowerCase())) {
                         toClient.writeUTF("FAILED");
+                        toClient.flush();
                         return;
                     }
                 }
@@ -201,7 +206,10 @@ public class ServerThread extends Thread {
                 this.sleep();
 
                 this.rooms.add(room);
+                
                 toClient.writeUTF("SUCCESS");
+                toClient.flush();
+                
                 window.appendLog("New room %s created by user %s: %s%n", request[1], request[2], new Date());
 
             } catch (IOException e) {

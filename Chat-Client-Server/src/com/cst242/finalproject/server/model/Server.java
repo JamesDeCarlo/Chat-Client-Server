@@ -68,8 +68,7 @@ public class Server implements WindowListener {
         for (;;) {
             try {
                 Socket clientSocket = serverSocket.accept();
-                Thread thread = new ServerThread(clientSocket, window, rooms);
-                thread.start();
+                 new ServerThread(clientSocket, window, rooms).start();                
             } catch (SocketException e) {
                 // window is closing so break from loop
                 break;
