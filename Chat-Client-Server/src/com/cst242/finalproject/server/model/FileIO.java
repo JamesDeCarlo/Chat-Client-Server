@@ -14,13 +14,15 @@ import java.io.ObjectOutputStream;
  * @author James DeCarlo
  */
 public class FileIO implements FileIOInterface {
-FileInputStream fileInputStream;
-ObjectInputStream objectInputStream;
 
-FileOutputStream fileOutputStream;
-ObjectOutputStream objectOutputStream;
+    FileInputStream fileInputStream;
+    ObjectInputStream objectInputStream;
 
-int accountNumber = 1000;
+    FileOutputStream fileOutputStream;
+    ObjectOutputStream objectOutputStream;
+
+    int accountNumber = 1000;
+
     @Override
     public boolean register(String loginId, int hashedPassword, String firstName, String lastName, String screenName) {
         File file = new File("userlist.dat");
@@ -34,27 +36,24 @@ int accountNumber = 1000;
         }
 
         if (file.length() == 0) {
-            try{
-              fileOutputStream = new FileOutputStream(file, true);
-              objectOutputStream = new ObjectOutputStream(fileOutputStream);
-              
-              accountNumber ++;
-              
-              User user = new User(accountNumber, loginId, hashedPassword, firstName, lastName, screenName);
-              
-            //Writing the User object to the file.
-            objectOutputStream.writeObject(user);
-            
-            fileOutputStream.close();
-            objectOutputStream.close();
+            try {
+                fileOutputStream = new FileOutputStream(file, true);
+                objectOutputStream = new ObjectOutputStream(fileOutputStream);
 
+                accountNumber++;
 
-            }
-            catch(Exception e){
+                User user = new User(accountNumber, loginId, hashedPassword, firstName, lastName, screenName);
+
+                //Writing the User object to the file.
+                objectOutputStream.writeObject(user);
+
+                fileOutputStream.close();
+                objectOutputStream.close();
+
+            } catch (Exception e) {
                 return false;
             }
-            
-            
+
         } else {
             try {
                 fileInputStream = new FileInputStream(file);
