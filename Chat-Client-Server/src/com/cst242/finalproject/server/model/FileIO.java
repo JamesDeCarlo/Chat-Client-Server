@@ -3,6 +3,7 @@ package com.cst242.finalproject.server.model;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -17,6 +18,16 @@ public class FileIO implements FileIOInterface {
     @Override
     public boolean register(String loginId, int hashedPassword, String firstName, String lastName, String screenName) {
         File file = new File("userlist.dat");
+        
+        if(!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException ex) {
+                return false;
+            }
+        }
+        
+        
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);

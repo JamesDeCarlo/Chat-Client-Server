@@ -23,7 +23,7 @@ public class FileIOTest {
     @Test
     public void testRegister() {
         System.out.println("register");
-        String loginId = "test212";
+        String loginId = "test22";
         int hashedPassword = 6969;
         String firstName = "John";
         String lastName = "Doe";
@@ -85,30 +85,5 @@ public class FileIOTest {
             fail("Failed to update the user");
         }
     }
-    
-    /**
-     * Test of deregister method, of class FileIO.
-     */
-    @Test
-    public void testDeregister() {
-        System.out.println("deregister");
-        int accountNumber = 0;
-        FileIO instance = new FileIO();
-        boolean expResult = false;
-        boolean result = instance.deregister(accountNumber);
-        assertEquals(expResult, result);
-        
-        User user = new FileIO().loginUser("test212", 6969);
-        
-        if(user == null){
-            fail("Failed to login user");
-            
-        }
-        
-        accountNumber = user.getAccountNumber();
-        expResult = true;
-        result = instance.deregister(accountNumber);
-        assertEquals(expResult, result);
-        
-    }
+       
 }
