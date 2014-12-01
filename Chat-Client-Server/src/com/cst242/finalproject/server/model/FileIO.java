@@ -17,47 +17,38 @@ public class FileIO implements FileIOInterface {
     @Override
     public boolean register(String loginId, int hashedPassword, String firstName, String lastName, String screenName) {
         File file = new File("userlist.dat");
-        if (file.exists()) {
-            try {
-                FileInputStream fileInputStream = new FileInputStream(file);
-                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-                
-                FileOutputStream fileOutputStream = new FileOutputStream(file);
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-                
-                
-                int accountNumber = 1000;
-                
-                while (objectInputStream.available() > 0) {
-                    User user = (User) objectInputStream.readObject();
-                    if (user.getAccountNumber() > accountNumber) {
-                        accountNumber = user.getAccountNumber();
-                    }  
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+
+            int accountNumber = 1000;
+
+            while (objectInputStream.available() > 0) {
+                User user = (User) objectInputStream.readObject();
+                if (user.getAccountNumber() > accountNumber) {
+                    accountNumber = user.getAccountNumber();
                 }
-                
-                accountNumber++;
-                User user = new User(accountNumber, loginId, hashedPassword, firstName, lastName, screenName);
-                
-                //Writing the User object to the file.
-                objectOutputStream.writeObject(user);
-                
-                fileInputStream.close();
-                objectInputStream.close();
-                fileOutputStream.close();
-                objectOutputStream.close();
-            }
-            catch(Exception e){
-                return false;
             }
 
+            accountNumber++;
+            User user = new User(accountNumber, loginId, hashedPassword, firstName, lastName, screenName);
+
+            //Writing the User object to the file.
+            objectOutputStream.writeObject(user);
+
+            fileInputStream.close();
+            objectInputStream.close();
+            fileOutputStream.close();
+            objectOutputStream.close();
+            
+        } catch (Exception e) {
+            return false;
         }
 
         return true;
-    }
-
-    @Override
-    public boolean deregister(int accountNumber) {
-        return false;
     }
 
     @Override
