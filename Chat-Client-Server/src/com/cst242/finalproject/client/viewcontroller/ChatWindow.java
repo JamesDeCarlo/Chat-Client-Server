@@ -14,15 +14,27 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
 
 /**
  *
  * @author James DeCarlo
  */
-public class ChatWindow extends javax.swing.JFrame implements ActionListener, Runnable{
+public class ChatWindow extends javax.swing.JFrame implements ActionListener, Runnable {
 
     private ClientRoom room;
+
+    private StyledDocument document;
+    private Style leftIndent;
+    private Style noIndent;
 
     /**
      * Creates new form ChatWindow
@@ -53,17 +65,34 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
         this.btnSend.addActionListener(this);
         this.btnExitRoom.addActionListener(this);
 
+        //Set the left indent style and document root for txtChatDisplay
+        StyleContext context = new StyleContext();
+        document = new DefaultStyledDocument(context);
+
+        leftIndent = context.addStyle("leftIndent", context.getStyle(StyleContext.DEFAULT_STYLE));
+        StyleConstants.setLeftIndent(leftIndent, 16);
+
+        noIndent = context.addStyle("noIndent", context.getStyle(StyleContext.DEFAULT_STYLE));
+        StyleConstants.setLeftIndent(noIndent, 0);
         
-         try {
-         room = new ClientRoom(host, port, user);
-         } catch (IOException ex) {
-         this.txtChatDisplay.append("Chat Rooom Closed\n");
-         return;
-         }
-        
-         Thread thread = new Thread(this);
-         thread.start();
-         
+        this.txtChatDisplay.setDocument(document);
+
+        try {
+            room = new ClientRoom(host, port, user);
+        } catch (IOException ex) {
+            try {
+                this.document.insertString(document.getLength(), "Chat room closed", noIndent);
+                this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
+
+            } catch (BadLocationException ex1) {
+                Logger.getLogger(ChatWindow.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            return;
+        }
+
+        Thread thread = new Thread(this);
+        thread.start();
+
     }
 
     /**
@@ -76,7 +105,7 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        txtChatDisplay = new javax.swing.JTextArea();
+        txtChatDisplay = new javax.swing.JTextPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtInput = new javax.swing.JTextArea();
         btnSend = new javax.swing.JButton();
@@ -85,12 +114,7 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         txtChatDisplay.setEditable(false);
-        txtChatDisplay.setColumns(20);
-        txtChatDisplay.setLineWrap(true);
-        txtChatDisplay.setRows(5);
-        txtChatDisplay.setWrapStyleWord(true);
         txtChatDisplay.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED), "Chat Window"));
-        txtChatDisplay.setCaretPosition(txtChatDisplay.getDocument().getLength());
         jScrollPane1.setViewportView(txtChatDisplay);
 
         txtInput.setColumns(20);
@@ -148,7 +172,7 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
     private javax.swing.JButton btnSend;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea txtChatDisplay;
+    private javax.swing.JTextPane txtChatDisplay;
     private javax.swing.JTextArea txtInput;
     // End of variables declaration//GEN-END:variables
 
@@ -159,11 +183,19 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
                 // send message
                 this.room.sendMessage(this.txtInput.getText());
             } catch (IOException ex) {
-                this.txtChatDisplay.append("Chat Room Closed\n");
+                try {
+                    this.document.insertString(document.getLength(), "Chat room closed", noIndent); 
+                    this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
+                } catch (BadLocationException ex1) {
+                    Logger.getLogger(ChatWindow.class.getName()).log(Level.SEVERE, null, ex1);
+                }
             }
 
             // clear the text box
             this.txtInput.setText("");
+            
+            // set focus back to input text box
+            this.txtInput.requestFocus();
 
         } else if (e.getActionCommand().equals("Exit Room")) {
             // close sockets and streams
@@ -178,27 +210,46 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
 
     @Override
     public void run() {
-                 try{
-         for(;;){
-         String msg = room.receiveMessage();
-         String[] arr = msg.split("\\s+", 2);
-            
-         if(arr[0].equals("MESSAGE")){
-         arr = arr[1].split("\\s+", 2);
+        try {
+            for (;;) {
+                String msg = room.receiveMessage();
+                String[] arr = msg.split("\\s+", 2);
+
+                if (arr[0].equals("MESSAGE")) {
+                    arr = arr[1].split("\\s+", 2);
+
+                    msg = String.format("%s %s:%n", arr[0], Helper.currentTimeStamp());
+                                        
+                    
+                    try {
+                        this.document.insertString(document.getLength(), msg, noIndent);
+                    } catch (BadLocationException ex) {
+                        Logger.getLogger(ChatWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    msg = String.format("%s%n", arr[1]);
+                    
+                    
+                    
+                    try {
+                        this.document.insertString(document.getLength(), msg, leftIndent);
+                    } catch (BadLocationException ex) {
+                        Logger.getLogger(ChatWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
+
+                }
+            }
+        } catch (IOException e) {
+            try {
                 
-         msg = String.format("%s %s:%n", arr[0], Helper.currentTimeStamp());
-                
-         this.txtChatDisplay.append(msg);
-                
-         msg = String.format("%s%n", arr[1]);
-                
-         this.txtChatDisplay.append(msg);
-                                
-         }
-         }
-         } catch (IOException e){
-         this.txtChatDisplay.append("Chat Room Closed\n");
-         }
+                this.document.insertString(document.getLength(), "Chat room closed", noIndent);
+                this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
+            } catch (BadLocationException ex) {
+                Logger.getLogger(ChatWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 
     }
 }
