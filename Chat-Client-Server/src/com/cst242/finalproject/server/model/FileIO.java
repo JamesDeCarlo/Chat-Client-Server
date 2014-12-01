@@ -25,7 +25,7 @@ public class FileIO implements FileIOInterface {
 
     @Override
     public boolean register(String loginId, int hashedPassword, String firstName, String lastName, String screenName) {
-                
+
         File file = new File("userlist.dat");
 
         if (!file.exists()) {
@@ -62,23 +62,25 @@ public class FileIO implements FileIOInterface {
 
                 fileOutputStream = new FileOutputStream(file, true);
                 objectOutputStream = new ObjectOutputStream(fileOutputStream);
-                
-                while (objectInputStream.available() > 0) {
-                    
-                    User user = (User) objectInputStream.readObject();
-                    
-                    if (user.getAccountNumber() > accountNumber) {
-                        accountNumber = user.getAccountNumber();
 
-                    } 
-                    if(user.getLoginId().toLowerCase().equals(loginId.toLowerCase())){
-                        return false;
+                User user = null;
+                do {
+
+                    user = (User) objectInputStream.readObject();
+
+                    if (user != null) {
+                        if (user.getAccountNumber() > accountNumber) {
+                            accountNumber = user.getAccountNumber();
+
+                        }
+                        if (user.getLoginId().toLowerCase().equals(loginId.toLowerCase())) {
+                            return false;
+                        }
                     }
-                    
-                }
-                
+                } while (user != null);
+
                 accountNumber++;
-                User user = new User(accountNumber, loginId, hashedPassword, firstName, lastName, screenName);
+                user = new User(accountNumber, loginId, hashedPassword, firstName, lastName, screenName);
 
                 //Writing the User object to the file.
                 objectOutputStream.writeObject(user);
