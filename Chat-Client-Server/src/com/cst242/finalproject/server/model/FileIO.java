@@ -14,52 +14,79 @@ import java.io.ObjectOutputStream;
  * @author James DeCarlo
  */
 public class FileIO implements FileIOInterface {
+FileInputStream fileInputStream;
+ObjectInputStream objectInputStream;
 
+FileOutputStream fileOutputStream;
+ObjectOutputStream objectOutputStream;
+
+int accountNumber = 1000;
     @Override
     public boolean register(String loginId, int hashedPassword, String firstName, String lastName, String screenName) {
         File file = new File("userlist.dat");
-        
-        if(!file.exists()){
+
+        if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException ex) {
                 return false;
             }
         }
-        
-        
-        try {
-            FileInputStream fileInputStream = new FileInputStream(file);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-
-            int accountNumber = 1000;
-
-            while (objectInputStream.available() > 0) {
-                User user = (User) objectInputStream.readObject();
-                if (user.getAccountNumber() > accountNumber) {
-                    accountNumber = user.getAccountNumber();
-                }
-                if(user.getLoginId().toLowerCase().equals(loginId.toLowerCase())){
-                    return false;
-                }
-            }
-
-            accountNumber++;
-            User user = new User(accountNumber, loginId, hashedPassword, firstName, lastName, screenName);
-
+        if (file.length() == 0) {
+            try{
+              fileOutputStream = new FileOutputStream(file, true);
+              objectOutputStream = new ObjectOutputStream(fileOutputStream);
+              
+              accountNumber ++;
+              
+              User user = new User(accountNumber, loginId, hashedPassword, firstName, lastName, screenName);
+              
             //Writing the User object to the file.
             objectOutputStream.writeObject(user);
-
-            fileInputStream.close();
-            objectInputStream.close();
+            
             fileOutputStream.close();
             objectOutputStream.close();
+
+
+            }
+            catch(Exception e){
+                return false;
+            }
             
-        } catch (Exception e) {
-            return false;
+            
+        } else {
+            try {
+                fileInputStream = new FileInputStream(file);
+                objectInputStream = new ObjectInputStream(fileInputStream);
+
+                fileOutputStream = new FileOutputStream(file, true);
+                objectOutputStream = new ObjectOutputStream(fileOutputStream);
+
+                while (objectInputStream.available() > 0) {
+                    User user = (User) objectInputStream.readObject();
+                    if (user.getAccountNumber() > accountNumber) {
+                        accountNumber = user.getAccountNumber();
+
+                    }
+
+                }
+
+                accountNumber++;
+                User user = new User(accountNumber, loginId, hashedPassword, firstName, lastName, screenName);
+
+                //Writing the User object to the file.
+                objectOutputStream.writeObject(user);
+
+                fileInputStream.close();
+                objectInputStream.close();
+                fileOutputStream.close();
+                objectOutputStream.close();
+
+            } catch (Exception e) {
+                return false;
+            }
+
         }
 
         return true;
