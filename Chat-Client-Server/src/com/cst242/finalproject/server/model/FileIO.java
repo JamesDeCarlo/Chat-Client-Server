@@ -62,9 +62,11 @@ public class FileIO implements FileIOInterface {
 
                 fileOutputStream = new FileOutputStream(file, true);
                 objectOutputStream = new ObjectOutputStream(fileOutputStream);
-
+                
                 while (objectInputStream.available() > 0) {
+                    
                     User user = (User) objectInputStream.readObject();
+                    
                     if (user.getAccountNumber() > accountNumber) {
                         accountNumber = user.getAccountNumber();
 
@@ -72,9 +74,9 @@ public class FileIO implements FileIOInterface {
                     if(user.getLoginId().toLowerCase().equals(loginId.toLowerCase())){
                         return false;
                     }
-
+                    
                 }
-
+                
                 accountNumber++;
                 User user = new User(accountNumber, loginId, hashedPassword, firstName, lastName, screenName);
 
