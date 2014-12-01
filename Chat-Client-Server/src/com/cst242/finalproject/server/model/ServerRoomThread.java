@@ -23,12 +23,15 @@ public class ServerRoomThread extends Thread {
 
     private final ServerRoomThread[] roomThreads;
     private final int MAX_USERS;
+    
+    private final String roomName;
 
-    public ServerRoomThread(PrimaryWindow window, Socket clientSocket, ServerRoomThread[] roomThreads) {
+    public ServerRoomThread(PrimaryWindow window, Socket clientSocket, ServerRoomThread[] roomThreads, String roomName) {
         this.window = window;
         this.clientSocket = clientSocket;
         this.roomThreads = roomThreads;
         this.MAX_USERS = roomThreads.length;
+        this.roomName = roomName;
     }
 
     @Override
@@ -40,14 +43,14 @@ public class ServerRoomThread extends Thread {
 
             // remove thread from list and close streams
             synchronized (this) {
-                for (int i = 0; i < roomThreads.length; i++) {
+                for (int i = 0; i < this.MAX_USERS; i++) {
                     if (roomThreads[i] == this) {
                         roomThreads[i] = null;
                     }
                 }
             }
 
-            window.appendLog("Failed to create client data streams in chat room: %s", new Date());
+            window.appendLog("Failed to create client data streams in chat room: %s%n", new Date());
             try {
                 clientSocket.close();
             } catch (IOException ex) {
@@ -56,13 +59,15 @@ public class ServerRoomThread extends Thread {
             return;
         }
 
+        window.appendLog("Client connected to Room %s: %s%n", this.roomName, new Date());
+        
         // loop and wait for message then broadcast to clients in all threads
         try {
             for (;;) {
                 String msg = fromClient.readUTF();
 
                 synchronized (this) {
-                    for (int i = 0; i < roomThreads.length; i++) {
+                    for (int i = 0; i < this.MAX_USERS; i++) {
                         if (roomThreads[i] != null) {
                             roomThreads[i].toClient.writeUTF(msg);
                         }
@@ -73,7 +78,7 @@ public class ServerRoomThread extends Thread {
         } catch (IOException ex) {
             // remove thread from list and close streams
             synchronized (this) {
-                for (int i = 0; i < roomThreads.length; i++) {
+                for (int i = 0; i < this.MAX_USERS; i++) {
                     if (roomThreads[i] == this) {
                         roomThreads[i] = null;
                     }
