@@ -25,15 +25,6 @@ public interface FileIOInterface {
     public boolean register(String loginId, int hashedPassword, 
             String firstName, String lastName, String screenName);
     
-    /**
-     * Deletes the {@code User} object from the "userlist.dat" file matching 
-     * the given account number. Will return true if the account is removed 
-     * successfully.
-     * 
-     * @param accountNumber The users account number
-     * @return True if removed successfully
-     */
-    public boolean deregister(int accountNumber);
     
     /**
      * Checks to see if the credentials given match one of the records in the 
