@@ -58,7 +58,7 @@ public class ServerRoom extends Thread {
                 int i;
                 for (i = 0; i < MAX_USERS; i++) {
                     if (ServerRoom.roomThreads[i] == null) {
-                        roomThreads[i] = new ServerRoomThread(window, clientSocket, roomThreads);
+                        roomThreads[i] = new ServerRoomThread(window, clientSocket, roomThreads, roomName);
                         roomThreads[i].start();
                         break;
                     }

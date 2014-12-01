@@ -6,6 +6,7 @@ import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,12 +21,12 @@ public class Server implements WindowListener {
 
     private static final int PORT = 9090;
 
-    private ServerSocket serverSocket;    
-    
+    private ServerSocket serverSocket;
+
     private List<ServerRoom> rooms;
 
     @SuppressWarnings({"CallToThreadStartDuringObjectConstruction", "LeakingThisInConstructor"})
-    public Server(PrimaryWindow window) {                
+    public Server(PrimaryWindow window) {
         try {
             // add window listener to shutdown threads when closing
             window.addWindowListener(this);
@@ -56,7 +57,7 @@ public class Server implements WindowListener {
 
             ServerRoom room4 = new ServerRoom("Conspiracy", 9094, window);
             room4.start();
-            rooms.add(room);
+            rooms.add(room4);
 
         } catch (IOException ex) {
             window.appendLog("Server error exit and restart to try again:  %s%n", ex);
@@ -65,17 +66,19 @@ public class Server implements WindowListener {
         }
 
         for (;;) {
-            
             try {
                 Socket clientSocket = serverSocket.accept();
-                Thread thread = new ServerThread(clientSocket, window, rooms);
-                thread.start();
+                 new ServerThread(clientSocket, window, rooms).start();                
+            } catch (SocketException e) {
+                // window is closing so break from loop
+                break;
             } catch (IOException ex) {
+                this.sleep();
                 window.appendLog("Failed to connect client: %s", new Date());
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
     }
 
     @Override
@@ -85,8 +88,19 @@ public class Server implements WindowListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
+
+        // close chat rooms
         for (ServerRoom room : this.rooms) {
             room.shutDown();
+        }
+
+        // close server socket
+        if (this.serverSocket != null) {
+            try {
+                this.serverSocket.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

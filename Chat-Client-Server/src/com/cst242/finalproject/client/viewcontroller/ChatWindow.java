@@ -5,38 +5,65 @@
  */
 package com.cst242.finalproject.client.viewcontroller;
 
+import com.cst242.finalproject.client.model.ClientRoom;
+import com.cst242.finalproject.client.model.Helper;
 import com.cst242.finalproject.client.model.User;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 import javax.swing.JFrame;
 
 /**
  *
  * @author James DeCarlo
  */
-public class ChatWindow extends javax.swing.JFrame {
+public class ChatWindow extends javax.swing.JFrame implements ActionListener, Runnable{
+
+    private ClientRoom room;
 
     /**
      * Creates new form ChatWindow
+     *
      * @param roomName
      * @param host
      * @param port
      * @param user
      */
+    @SuppressWarnings({"LeakingThisInConstructor", "CallToThreadStartDuringObjectConstruction"})
     public ChatWindow(String roomName, String host, int port, User user) {
         super(roomName);
         initComponents();
-        
+
         // Center the jframe in the screen
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation((dim.width - this.getSize().width)/2, (dim.height - this.getSize().height)/2);
+        this.setLocation((dim.width - this.getSize().width) / 2, (dim.height - this.getSize().height) / 2);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
+
         // Set image icon for jframe
         Image image = Toolkit.getDefaultToolkit().getImage("c_icon.png");
         this.setIconImage(image);
 
+        // Set focus in text box
+        this.txtInput.requestFocus();
+
+        // create button listener for send button and exit button
+        this.btnSend.addActionListener(this);
+        this.btnExitRoom.addActionListener(this);
+
+        
+         try {
+         room = new ClientRoom(host, port, user);
+         } catch (IOException ex) {
+         this.txtChatDisplay.append("Chat Rooom Closed\n");
+         return;
+         }
+        
+         Thread thread = new Thread(this);
+         thread.start();
+         
     }
 
     /**
@@ -57,6 +84,7 @@ public class ChatWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        txtChatDisplay.setEditable(false);
         txtChatDisplay.setColumns(20);
         txtChatDisplay.setLineWrap(true);
         txtChatDisplay.setRows(5);
@@ -113,7 +141,7 @@ public class ChatWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExitRoom;
@@ -123,4 +151,54 @@ public class ChatWindow extends javax.swing.JFrame {
     private javax.swing.JTextArea txtChatDisplay;
     private javax.swing.JTextArea txtInput;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("Send")) {
+            try {
+                // send message
+                this.room.sendMessage(this.txtInput.getText());
+            } catch (IOException ex) {
+                this.txtChatDisplay.append("Chat Room Closed\n");
+            }
+
+            // clear the text box
+            this.txtInput.setText("");
+
+        } else if (e.getActionCommand().equals("Exit Room")) {
+            // close sockets and streams
+            if (this.room != null) {
+                this.room.close();
+            }
+
+            // destroy window
+            this.dispose();
+        }
+    }
+
+    @Override
+    public void run() {
+                 try{
+         for(;;){
+         String msg = room.receiveMessage();
+         String[] arr = msg.split("\\s+", 2);
+            
+         if(arr[0].equals("MESSAGE")){
+         arr = arr[1].split("\\s+", 2);
+                
+         msg = String.format("%s %s:%n", arr[0], Helper.currentTimeStamp());
+                
+         this.txtChatDisplay.append(msg);
+                
+         msg = String.format("%s%n", arr[1]);
+                
+         this.txtChatDisplay.append(msg);
+                                
+         }
+         }
+         } catch (IOException e){
+         this.txtChatDisplay.append("Chat Room Closed\n");
+         }
+
+    }
 }
