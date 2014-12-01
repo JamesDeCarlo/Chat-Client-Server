@@ -31,6 +31,9 @@ public class FileIO implements FileIOInterface {
                 if (user.getAccountNumber() > accountNumber) {
                     accountNumber = user.getAccountNumber();
                 }
+                if(user.getLoginId().toLowerCase().equals(loginId.toLowerCase())){
+                    return false;
+                }
             }
 
             accountNumber++;
