@@ -17,6 +17,7 @@ public class FileIO implements FileIOInterface {
 
     @Override
     public boolean register(String loginId, int hashedPassword, String firstName, String lastName, String screenName) {
+                
         File file = new File("userlist.dat");
         
         if(!file.exists()){
@@ -26,17 +27,25 @@ public class FileIO implements FileIOInterface {
                 return false;
             }
         }
+                
+        
         
         
         try {
-            FileInputStream fileInputStream = new FileInputStream(file);
+            FileInputStream fileInputStream = new FileInputStream(file);                        
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            
+            
+            FileOutputStream fileOutputStream = new FileOutputStream(file,true);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 
+            System.out.println("Streams created.\n");
+            
             int accountNumber = 1000;
-
+            
+            
+            
             while (objectInputStream.available() > 0) {
                 User user = (User) objectInputStream.readObject();
                 if (user.getAccountNumber() > accountNumber) {
@@ -52,15 +61,20 @@ public class FileIO implements FileIOInterface {
 
             //Writing the User object to the file.
             objectOutputStream.writeObject(user);
+            
+            objectOutputStream.reset();
+            objectOutputStream.flush();
 
-            fileInputStream.close();
             objectInputStream.close();
-            fileOutputStream.close();
+            fileInputStream.close();
+            
             objectOutputStream.close();
+            fileOutputStream.close();
+            
             
         } catch (Exception e) {
             return false;
-        }
+        } 
 
         return true;
     }
