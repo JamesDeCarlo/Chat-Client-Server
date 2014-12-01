@@ -25,6 +25,7 @@ public class FileIO implements FileIOInterface {
 
     @Override
     public boolean register(String loginId, int hashedPassword, String firstName, String lastName, String screenName) {
+                
         File file = new File("userlist.dat");
 
         if (!file.exists()) {
@@ -67,6 +68,9 @@ public class FileIO implements FileIOInterface {
                     if (user.getAccountNumber() > accountNumber) {
                         accountNumber = user.getAccountNumber();
 
+                    } 
+                    if(user.getLoginId().toLowerCase().equals(loginId.toLowerCase())){
+                        return false;
                     }
 
                 }
