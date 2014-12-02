@@ -23,13 +23,31 @@ public class FileIOTest {
     @Test
     public void testRegister() {
         System.out.println("register");
+        String loginId = "test252";
+        int hashedPassword = 6973;
+        String firstName = "Tom";
+        String lastName = "Jones";
+        String screenName = "Tom_Jones";
+        FileIO instance = new FileIO();
+        boolean expResult = true;
+        boolean result = instance.register(loginId, hashedPassword, firstName, lastName, screenName);
+        assertEquals(expResult, result);        
+    }    
+    
+    /**
+     * Test of register method, of class FileIO.
+     */
+    
+    @Test
+    public void testDuplicateRegister() {
+        System.out.println("duplicateRegister");
         String loginId = "test232";
         int hashedPassword = 6969;
         String firstName = "John";
         String lastName = "Doe";
         String screenName = "sir_john_doe";
         FileIO instance = new FileIO();
-        boolean expResult = true;
+        boolean expResult = false;
         boolean result = instance.register(loginId, hashedPassword, firstName, lastName, screenName);
         assertEquals(expResult, result);        
     }    
@@ -37,6 +55,7 @@ public class FileIOTest {
     /**
      * Test of loginUser method, of class FileIO.
      */
+    
     @Test
     public void testLoginUser() {
         System.out.println("loginUser");
