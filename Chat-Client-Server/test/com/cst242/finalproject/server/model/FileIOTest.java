@@ -23,7 +23,7 @@ public class FileIOTest {
     @Test
     public void testRegister() {
         System.out.println("register");
-        String loginId = "test232";
+        String loginId = "tes232";
         int hashedPassword = 6969;
         String firstName = "John";
         String lastName = "Doe";
