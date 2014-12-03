@@ -10,14 +10,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This class is responsible for the communications with the main chat server.
+ * 
  * @author James DeCarlo
  */
 public class Client {
 
-    Socket serverSocket;
-    DataInputStream fromServer;
-    DataOutputStream toServer;
+    private final Socket serverSocket;
+    private final DataInputStream fromServer;
+    private final DataOutputStream toServer;
 
     /**
      * Creates a new client object with the socket and data streams initialized.
@@ -35,7 +36,9 @@ public class Client {
     /**
      * Registers a new user with the server.
      * 
-     * @param user 
+     * @param user a user object with all fields filled in except for account
+     * number.
+     * 
      * @return {@code true} if user is added to the server successfully.
      * @throws IOException if gets disconnected from the server.
      */
@@ -109,9 +112,9 @@ public class Client {
     /**
      * Gets the list of registered rooms from the server
      * 
-     * @param user
+     * @param user a user that was returned from login
      * @return a list of rooms
-     * @throws java.io.IOException
+     * @throws java.io.IOException If server unavailable
      */
     public List<Room> getRegisteredRooms(User user) throws IOException{
         String msg = String.format("ROOMS %s", user.getLoginId());
