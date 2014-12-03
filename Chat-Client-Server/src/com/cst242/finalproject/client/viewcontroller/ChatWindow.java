@@ -14,6 +14,7 @@ import java.io.IOException;
 import javax.swing.JFrame;
 
 /**
+ * This class is the main GUI for the chat room.
  * 
  * @author James DeCarlo
  */
@@ -23,12 +24,12 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
     private boolean shiftPressed = false;
     
     /**
-     * Creates new form ChatWindow
+     * Creates new ChatWindow and displays it in the center of the screen.
      *
-     * @param roomName
-     * @param host
-     * @param port
-     * @param user
+     * @param roomName The name of the room.
+     * @param host The host name of the room.
+     * @param port The port number of the room.
+     * @param user The user object returned from a previous login.
      */
     @SuppressWarnings({"LeakingThisInConstructor", "CallToThreadStartDuringObjectConstruction"})
     public ChatWindow(String roomName, String host, int port, User user) {
