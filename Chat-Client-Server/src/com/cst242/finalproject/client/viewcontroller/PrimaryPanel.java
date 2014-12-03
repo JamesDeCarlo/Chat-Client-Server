@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.cst242.finalproject.client.viewcontroller;
 
 import java.awt.Component;
 import javax.swing.JButton;
 
 /**
- *
+ * This class is for the primary form panel.
+ * 
  * @author James DeCarlo
  */
 public class PrimaryPanel extends javax.swing.JPanel {
@@ -21,14 +17,26 @@ public class PrimaryPanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    /**
+     * Gets the exit button.
+     * @return The exit button.
+     */
     public JButton getBtnExit() {
         return btnExit;
     }
 
+    /**
+     * Gets the login button.
+     * @return The login button.
+     */
     public JButton getBtnLogin() {
         return btnLogin;
     }
 
+    /**
+     * Gets the register button.
+     * @return The register button.
+     */
     public JButton getBtnRegister() {
         return btnRegister;
     }    
