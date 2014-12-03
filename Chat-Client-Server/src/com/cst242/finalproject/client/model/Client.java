@@ -69,9 +69,9 @@ public class Client {
      * Logs a user in to the server and receives information to fill the user
      * object.
      * 
-     * @param user a user object with the loginId and hashedPassword set
-     * @return a {@code User} object fully filled in 
-     * @throws IOException if gets disconnected from the server.
+     * @param user A user object with the loginId and hashedPassword set
+     * @return A {@code User} object fully filled in 
+     * @throws IOException If gets disconnected from the server.
      */
     public User login(User user) throws IOException{
         // Create message to send to server
@@ -112,8 +112,8 @@ public class Client {
     /**
      * Gets the list of registered rooms from the server
      * 
-     * @param user a user that was returned from login
-     * @return a list of rooms
+     * @param user A user that was returned from login
+     * @return A list of rooms
      * @throws java.io.IOException If server unavailable
      */
     public List<Room> getRegisteredRooms(User user) throws IOException{
@@ -140,8 +140,8 @@ public class Client {
      * Creates a new room with the server. If the room name is not unique or 
      * contains spaces will return {@code false}.
      * 
-     * @param roomName the name of the room no spaces
-     * @param user a valid user object with login id filled in.
+     * @param roomName The name of the room no spaces
+     * @param user A valid user object with login id filled in.
      * @return {@code true} if room created successfully.
      * @throws java.io.IOException If server unavailable.
      */
