@@ -28,9 +28,9 @@ public class FileIOTest {
         String firstName = "Tom";
         String lastName = "Jones";
         String screenName = "Tom_Jones";
-        FileIO instance = new FileIO();
+        FileIO instance1 = new FileIO();
         boolean expResult = true;
-        boolean result = instance.register(loginId, hashedPassword, firstName, lastName, screenName);
+        boolean result = instance1.register(loginId, hashedPassword, firstName, lastName, screenName);
         assertEquals(expResult, result);        
     }    
     
