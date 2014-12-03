@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.cst242.finalproject.client.viewcontroller;
 
 import javax.swing.JButton;
 import javax.swing.JList;
 
 /**
- *
+ * This class is for the select rooms form panel.
+ * 
  * @author James DeCarlo
  */
 public class SelectRoomsPanel extends javax.swing.JPanel {
@@ -21,18 +17,34 @@ public class SelectRoomsPanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    /**
+     * Gets the cancel button.
+     * @return The cancel button.
+     */
     public JButton getBtnCancel() {
         return btnCancel;
     }
 
+    /**
+     * Gets the create new room button.
+     * @return The create new room button.
+     */
     public JButton getBtnCreateNewRoom() {
         return btnCreateNewRoom;
     }
 
+    /**
+     * Gets the enter button.
+     * @return The enter button.
+     */
     public JButton getBtnEnter() {
         return btnEnter;
     }
 
+    /**
+     * Gets the select room list.
+     * @return The select room list.
+     */
     public JList getLstSelectRoom() {
         return lstSelectRoom;
     }
