@@ -3,26 +3,25 @@ package com.cst242.finalproject.client.viewcontroller;
 import com.cst242.finalproject.client.model.ClientRoom;
 import com.cst242.finalproject.client.model.Helper;
 import com.cst242.finalproject.client.model.User;
+import com.sun.glass.events.KeyEvent;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 import java.io.IOException;
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
 import javax.swing.JFrame;
-import javax.swing.KeyStroke;
 
 /**
  *
  * @author James DeCarlo
  */
-public class ChatWindow extends javax.swing.JFrame implements ActionListener, Runnable {
+public class ChatWindow extends javax.swing.JFrame implements ActionListener, Runnable, KeyListener {
 
     private ClientRoom room;
-
+    private boolean shiftPressed = false;
+    
     /**
      * Creates new form ChatWindow
      *
@@ -60,21 +59,8 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
             return;
         }
 
-        //  Map input keys so that ENTER will perform a send
-        //  and shift-ENTER will insert a line break.
-        InputMap inpMap = this.txtInput.getInputMap();
-        KeyStroke enter = KeyStroke.getKeyStroke("ENTER");
-        KeyStroke shiftEnter = KeyStroke.getKeyStroke("shift ENTER");
-        inpMap.put(shiftEnter, "insert-break");
-        inpMap.put(enter, "text-send");
-
-        ActionMap actMap = this.txtInput.getActionMap();
-        actMap.put("text-send", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent ev) {
-                sendMessage();
-            }
-        });
+        
+        this.txtInput.addKeyListener(this);
 
         Thread thread = new Thread(this);
         thread.start();
@@ -225,6 +211,31 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
             this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
         }
 
+    }
+
+    @Override
+    public void keyTyped(java.awt.event.KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER){
+            if(shiftPressed){
+                this.txtInput.append("\n");
+            } else {
+                this.sendMessage();
+            }
+        }
+    }
+
+    @Override
+    public void keyPressed(java.awt.event.KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_SHIFT){
+            this.shiftPressed = true;
+        }
+    }
+
+    @Override
+    public void keyReleased(java.awt.event.KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_SHIFT){
+            this.shiftPressed = false;
+        }
     }
     
     
