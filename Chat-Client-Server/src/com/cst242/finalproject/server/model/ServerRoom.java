@@ -9,7 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This class sets up the chat room and waits for new client connections.
+ * 
  * @author James DeCarlo
  */
 public class ServerRoom extends Thread {
@@ -25,6 +26,13 @@ public class ServerRoom extends Thread {
     private ServerSocket serverSocket;
     private Socket clientSocket;
 
+    /**
+     * Creates a new server room object.
+     * 
+     * @param roomName The name of the chat room.
+     * @param port The port number of the chat room.
+     * @param window The primary window for logging.
+     */
     @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
     public ServerRoom(String roomName, int port, PrimaryWindow window) {
 
@@ -34,10 +42,18 @@ public class ServerRoom extends Thread {
 
     }
 
+    /**
+     * Gets the name of the chat room.
+     * @return The name of the chat room.
+     */
     public String getRoomName() {
         return roomName;
     }
 
+    /**
+     * Gets the port number of the chat room.
+     * @return The port number of the chat room.
+     */
     public int getPort() {
         return port;
     }
@@ -76,6 +92,9 @@ public class ServerRoom extends Thread {
         }
     }
 
+    /**
+     * Shuts down the chat room should be called when closing down the server.
+     */
     public void shutDown() {
         try {
             if (this.serverSocket != null) {

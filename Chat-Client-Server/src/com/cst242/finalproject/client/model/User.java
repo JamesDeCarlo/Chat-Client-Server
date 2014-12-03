@@ -80,6 +80,10 @@ public class User {
         this.hashedPassword = this.hashPassword(password);
     }
     
+    /**
+     * Sets the hashed password.
+     * @param hashedPassword The hashed password.
+     */
     public void setHashedPassword(int hashedPassword){
         this.hashedPassword = hashedPassword;
     }

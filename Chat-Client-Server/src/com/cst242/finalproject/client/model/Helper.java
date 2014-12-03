@@ -32,6 +32,11 @@ public class Helper {
         return true;
     }
     
+    /**
+     * Splits a given string by white spaces into an array.
+     * @param str The string to be split.
+     * @return An array of the given string split by white spaces.
+     */
     public static String[] splitString(String str){
         return str.split("\\s+");
     }

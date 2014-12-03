@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.cst242.finalproject.server.viewcontroller;
 
 import java.awt.BorderLayout;
@@ -15,8 +10,9 @@ import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
 
 /**
- *
- * @author James
+ * This class is the primary GUI for the chat server.
+ * 
+ * @author James DeCarlo
  */
 public class PrimaryWindow extends JFrame {
 
@@ -39,6 +35,9 @@ public class PrimaryWindow extends JFrame {
 
     };
 
+    /**
+     * Initializes the Primary window for the chat server.
+     */
     public PrimaryWindow() {
         // Set up JFrame
         super("Chat Server");
@@ -59,6 +58,13 @@ public class PrimaryWindow extends JFrame {
 
     }
 
+    /**
+     * Appends the text area for the log window.
+     * 
+     * @param formatedString see {@code String.format()} for details.
+     * @param args an variable field of given arguments that corresponds to the
+     * formated string.
+     */
     public void appendLog(String formatedString, Object... args) {
         synchronized (this) {
             this.textLog.append(String.format(formatedString, args));

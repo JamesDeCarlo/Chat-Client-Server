@@ -26,6 +26,13 @@ public class ServerThread extends Thread {
     private DataInputStream fromClient;
     private DataOutputStream toClient;
 
+    /**
+     * Create a new server thread object.
+     * 
+     * @param clientSocket The client socket created on connection.
+     * @param window The primary window for logging purposes.
+     * @param rooms The chat rooms list so we can add to it on client request.
+     */
     public ServerThread(Socket clientSocket, PrimaryWindow window, List<ServerRoom> rooms) {
         this.clientSocket = clientSocket;
         this.window = window;
