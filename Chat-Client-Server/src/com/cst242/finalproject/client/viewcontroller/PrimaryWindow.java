@@ -26,7 +26,9 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 /**
- *
+ * This class is the main GUI for the chat client. This class displays and 
+ * controls all the panels in this package.
+ * 
  * @author James DeCarlo
  */
 public class PrimaryWindow extends JFrame implements ActionListener {
@@ -51,6 +53,9 @@ public class PrimaryWindow extends JFrame implements ActionListener {
     private DefaultListModel listModel;
     private final List<JFrame> chatWindows;
     
+    /**
+     * Sets up the JFrame and all of the panels to be used in the main GUI.
+     */
     @SuppressWarnings("LeakingThisInConstructor")
     public PrimaryWindow() {
         super("Chat Client");
