@@ -9,7 +9,11 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 
 /**
  *
@@ -55,6 +59,22 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
             this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
             return;
         }
+
+        //  Map input keys so that ENTER will perform a send
+        //  and shift-ENTER will insert a line break.
+        InputMap inpMap = this.txtInput.getInputMap();
+        KeyStroke enter = KeyStroke.getKeyStroke("ENTER");
+        KeyStroke shiftEnter = KeyStroke.getKeyStroke("shift ENTER");
+        inpMap.put(shiftEnter, "insert-break");
+        inpMap.put(enter, "text-send");
+
+        ActionMap actMap = this.txtInput.getActionMap();
+        actMap.put("text-send", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                sendMessage();
+            }
+        });
 
         Thread thread = new Thread(this);
         thread.start();
@@ -149,7 +169,21 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Send")) {
-            try {
+            this.sendMessage();
+            
+        } else if (e.getActionCommand().equals("Exit Room")) {
+            // close sockets and streams
+            if (this.room != null) {
+                this.room.close();
+            }
+
+            // destroy window
+            this.dispose();
+        }
+    }
+
+    private void sendMessage(){
+        try {
                 // send message
                 this.room.sendMessage(this.txtInput.getText());
             } catch (IOException ex) {
@@ -162,18 +196,8 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
 
             // set focus back to input text box
             this.txtInput.requestFocus();
-
-        } else if (e.getActionCommand().equals("Exit Room")) {
-            // close sockets and streams
-            if (this.room != null) {
-                this.room.close();
-            }
-
-            // destroy window
-            this.dispose();
-        }
     }
-
+    
     @Override
     public void run() {
         try {
@@ -184,7 +208,7 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
                 if (arr[0].equals("MESSAGE")) {
                     arr = arr[1].split("\\s+", 2);
 
-                    msg = String.format(">>>>%s %s:%n", arr[0], Helper.currentTimeStamp());
+                    msg = String.format(">>>> %s %s:%n", arr[0], Helper.currentTimeStamp());
 
                     this.txtChatDisplay.append(msg);
 
@@ -202,4 +226,6 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
         }
 
     }
+    
+    
 }
