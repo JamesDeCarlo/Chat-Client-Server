@@ -11,7 +11,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This is the main server thread class. It is responsible for handling request
+ * from the client.
+ * 
  * @author James DeCarlo
  */
 public class ServerThread extends Thread {
@@ -77,7 +79,7 @@ public class ServerThread extends Thread {
     /**
      * Process the clients request and calls the corresponding method.
      *
-     * @param request
+     * @param request the request array
      */
     public void processRequest(String[] request) {
         if (request[0].equals("REGISTER")) {
@@ -94,7 +96,7 @@ public class ServerThread extends Thread {
     /**
      * Registers a new user
      *
-     * @param request
+     * @param request the request array
      */
     public void register(String[] request) {
         FileIO fileIO = new FileIO();
@@ -114,7 +116,7 @@ public class ServerThread extends Thread {
     /**
      * Logs a user in to the server
      *
-     * @param request
+     * @param request the request array
      */
     public void login(String[] request) {
         FileIO fileIO = new FileIO();
@@ -151,7 +153,7 @@ public class ServerThread extends Thread {
     /**
      * Sends the list of available rooms to the user.
      *
-     * @param request
+     * @param request the request array
      */
     public void getRooms(String[] request) {
 
@@ -180,7 +182,7 @@ public class ServerThread extends Thread {
     /**
      * Checks if room name is unique if so creates new chat room
      *
-     * @param request
+     * @param request the request array
      */
     public void createRoom(String[] request) {
         synchronized (this) {
