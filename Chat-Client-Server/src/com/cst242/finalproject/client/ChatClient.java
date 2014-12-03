@@ -1,19 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.cst242.finalproject.client;
 
 import com.cst242.finalproject.client.viewcontroller.PrimaryWindow;
 
 /**
- *
- * @author James
+ * This is the main class where the program for the chat client begins.
+ * 
+ * @author James DeCarlo
  */
 public class ChatClient {
 
     /**
+     * This is the main method where the chat client begins.
+     * 
      * @param args the command line arguments
      */
     public static void main(String[] args) {
