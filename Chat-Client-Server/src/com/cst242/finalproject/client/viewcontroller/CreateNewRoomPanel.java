@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.cst242.finalproject.client.viewcontroller;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
 
 /**
- *
+ * This class is for the create new room form panel.
+ * 
  * @author James DeCarlo
  */
 public class CreateNewRoomPanel extends javax.swing.JPanel {
@@ -21,14 +17,26 @@ public class CreateNewRoomPanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    /**
+     * Gets the cancel button.
+     * @return The cancel button.
+     */
     public JButton getBtnCancel() {
         return btnCancel;
     }
 
+    /**
+     * Gets the create room button.
+     * @return The create room button.
+     */
     public JButton getBtnCreateRoom() {
         return btnCreateRoom;
     }
 
+    /**
+     * Gets the room name text field.
+     * @return The room name text field.
+     */
     public JTextField getTxtRoomName() {
         return txtRoomName;
     }

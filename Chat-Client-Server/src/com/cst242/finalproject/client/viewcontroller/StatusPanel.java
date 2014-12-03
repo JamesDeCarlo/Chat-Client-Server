@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.cst242.finalproject.client.viewcontroller;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
 /**
- *
+ * This class is for the status form panel.
+ * 
  * @author James DeCarlo
  */
 public class StatusPanel extends javax.swing.JPanel {
@@ -21,22 +17,42 @@ public class StatusPanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    /**
+     * Gets the logout button.
+     * @return The logout button.
+     */
     public JButton getBtnLogout() {
         return btnLogout;
     }
 
+    /**
+     * Gets the preferences button.
+     * @return The preferences button.
+     */
     public JButton getBtnPreferences() {
         return btnPreferences;
     }
 
+    /**
+     * Gets the select rooms button.
+     * @return The select rooms button.
+     */
     public JButton getBtnSelectRooms() {
         return btnSelectRooms;
     }
 
+    /**
+     * Gets the greeting label.
+     * @return The greeting label.
+     */
     public JLabel getLblGreeting() {
         return lblGreeting;
     }
 
+    /**
+     * Gets the screen name label.
+     * @return The screen name label.
+     */
     public JLabel getLblScreenName() {
         return lblScreenName;
     }   

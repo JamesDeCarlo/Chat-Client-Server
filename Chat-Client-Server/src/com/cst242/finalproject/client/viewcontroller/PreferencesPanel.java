@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.cst242.finalproject.client.viewcontroller;
 
 import javax.swing.JButton;
@@ -10,46 +5,80 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
- *
+ * This class is for the preferences form panel.
+ * 
  * @author James DeCarlo
  */
 public class PreferencesPanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form RegistrationPanel
+     * Creates new form Preferences Panel
      */
     public PreferencesPanel() {
         initComponents();
     }
 
+    /**
+     * Gets the cancel button.
+     * @return The cancel button.
+     */
     public JButton getBtnCancel() {
         return btnCancel;
     }
 
+    /**
+     * Gets the submit button.
+     * @return the submit button.
+     */
     public JButton getBtnSubmit() {
         return btnSubmit;
     }
 
+    /**
+     * Gets the password confirm text field.
+     * @return The password confirm text field.
+     */
     public JPasswordField getTxtConfirm() {
         return txtConfirm;
     }
 
+    /**
+     * Gets the first name text field.
+     * @return The first name text field.
+     */
     public JTextField getTxtFirstName() {
         return txtFirstName;
     }
 
+    /**
+     * Gets the last name text field.
+     * @return The last name text field.
+     */
     public JTextField getTxtLastName() {
         return txtLastName;
     }
 
+    /**
+     * Gets the login id text field.
+     * 
+     * @return The login id text field.
+     */
     public JTextField getTxtLoginId() {
         return txtLoginId;
     }
 
+    /**
+     * Gets the password text field.
+     * @return The password text field.
+     */
     public JPasswordField getTxtPassword() {
         return txtPassword;
     }
 
+    /**
+     * Gets the screen name text field.
+     * @return The screen name text field.
+     */
     public JTextField getTxtScreenName() {
         return txtScreenName;
     }

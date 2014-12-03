@@ -14,7 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This class is sets up the server socket and spawns new server threads.
+ * It also starts 4 default chat rooms by spawning new server room threads.
+ * 
  * @author James DeCarlo
  */
 public class Server implements WindowListener {
@@ -25,6 +27,12 @@ public class Server implements WindowListener {
 
     private List<ServerRoom> rooms;
 
+    /**
+     * Starts the server listening on port 9090 and creates four default chat 
+     * rooms that increment in number starting with port 9091.
+     * 
+     * @param window The primary window for logging purposes.
+     */
     @SuppressWarnings({"CallToThreadStartDuringObjectConstruction", "LeakingThisInConstructor"})
     public Server(PrimaryWindow window) {
         try {

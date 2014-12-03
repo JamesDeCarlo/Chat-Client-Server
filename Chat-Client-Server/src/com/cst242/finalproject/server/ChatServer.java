@@ -15,7 +15,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- *
+ * This is the main class for the chat server it has the main() method.
+ * 
  * @author James DeCarlo
  */
 public class ChatServer {
@@ -23,6 +24,8 @@ public class ChatServer {
     
     
     /**
+     * The main method that starts the chat server.
+     * 
      * @param args the command line arguments
      */
     public static void main(String[] args) {

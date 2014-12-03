@@ -1,7 +1,8 @@
 package com.cst242.finalproject.client.model;
 
 /**
- * This is the base user class.
+ * This is a POJO class for a user object, which also handles password 
+ * encryption.
  * 
  * @author James DeCarlo
  */
@@ -13,6 +14,9 @@ public class User {
     private String lastName;
     private String screenName;
 
+    /**
+     * Creates the base {@code User} object.
+     */
     public User(){
         
     }
@@ -76,6 +80,10 @@ public class User {
         this.hashedPassword = this.hashPassword(password);
     }
     
+    /**
+     * Sets the hashed password.
+     * @param hashedPassword The hashed password.
+     */
     public void setHashedPassword(int hashedPassword){
         this.hashedPassword = hashedPassword;
     }

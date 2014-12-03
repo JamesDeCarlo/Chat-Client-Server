@@ -10,7 +10,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This is the thread that handles all communications with the chat client in 
+ * the chat room.
+ * 
  * @author James DeCarlo
  */
 public class ServerRoomThread extends Thread {
@@ -26,6 +28,15 @@ public class ServerRoomThread extends Thread {
     
     private final String roomName;
 
+    /**
+     * Creates a new Server room thread.
+     * 
+     * @param window The primary window for logging.
+     * @param clientSocket The client socket created on connection.
+     * @param roomThreads The server room threads for inter thread 
+     * communication.
+     * @param roomName The name of the chat room.
+     */
     public ServerRoomThread(PrimaryWindow window, Socket clientSocket, ServerRoomThread[] roomThreads, String roomName) {
         this.window = window;
         this.clientSocket = clientSocket;
@@ -95,6 +106,11 @@ public class ServerRoomThread extends Thread {
 
     }
 
+    /**
+     * Shuts down the server thread and all of its connections and sockets.
+     * Should be called when server is shutting down or client disconnects from
+     * the chat room.
+     */
     public void shutDown() {
         try {
             this.fromClient.close();

@@ -11,7 +11,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This is the main server thread class. It is responsible for handling request
+ * from the client.
+ * 
  * @author James DeCarlo
  */
 public class ServerThread extends Thread {
@@ -24,6 +26,13 @@ public class ServerThread extends Thread {
     private DataInputStream fromClient;
     private DataOutputStream toClient;
 
+    /**
+     * Create a new server thread object.
+     * 
+     * @param clientSocket The client socket created on connection.
+     * @param window The primary window for logging purposes.
+     * @param rooms The chat rooms list so we can add to it on client request.
+     */
     public ServerThread(Socket clientSocket, PrimaryWindow window, List<ServerRoom> rooms) {
         this.clientSocket = clientSocket;
         this.window = window;
@@ -77,7 +86,7 @@ public class ServerThread extends Thread {
     /**
      * Process the clients request and calls the corresponding method.
      *
-     * @param request
+     * @param request the request array
      */
     public void processRequest(String[] request) {
         if (request[0].equals("REGISTER")) {
@@ -94,7 +103,7 @@ public class ServerThread extends Thread {
     /**
      * Registers a new user
      *
-     * @param request
+     * @param request the request array
      */
     public void register(String[] request) {
         FileIO fileIO = new FileIO();
@@ -114,7 +123,7 @@ public class ServerThread extends Thread {
     /**
      * Logs a user in to the server
      *
-     * @param request
+     * @param request the request array
      */
     public void login(String[] request) {
         FileIO fileIO = new FileIO();
@@ -151,7 +160,7 @@ public class ServerThread extends Thread {
     /**
      * Sends the list of available rooms to the user.
      *
-     * @param request
+     * @param request the request array
      */
     public void getRooms(String[] request) {
 
@@ -180,7 +189,7 @@ public class ServerThread extends Thread {
     /**
      * Checks if room name is unique if so creates new chat room
      *
-     * @param request
+     * @param request the request array
      */
     public void createRoom(String[] request) {
         synchronized (this) {

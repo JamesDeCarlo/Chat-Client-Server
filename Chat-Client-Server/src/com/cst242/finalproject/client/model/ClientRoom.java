@@ -8,15 +8,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This class is responsible for communicating with one of the servers chat
+ * rooms.
+ * 
  * @author James DeCarlo
  */
 public class ClientRoom {
     
-    Socket serverSocket;
-    DataInputStream fromServer;
-    DataOutputStream toServer;
-    User user;
+    private final Socket serverSocket;
+    private final DataInputStream fromServer;
+    private final DataOutputStream toServer;
+    private final User user;
     
     /**
      * Creates a new client room object with the socket and data streams 
@@ -40,7 +42,7 @@ public class ClientRoom {
      * Sends a chat message to the server
      * 
      * @param msg the message to be sent
-     * @throws java.io.IOException
+     * @throws java.io.IOException if disconnected from chat room
      */
     public final void sendMessage(String msg) throws IOException{
         this.toServer.writeUTF(String.format("MESSAGE %s %s", user.getScreenName(), msg));
@@ -50,7 +52,7 @@ public class ClientRoom {
      * Receives a chat message from the server
      * 
      * @return the message from the server needs to be formated
-     * @throws java.io.IOException
+     * @throws java.io.IOException if disconnected from chat room
      */
     public String receiveMessage() throws IOException{
         return this.fromServer.readUTF();
