@@ -74,6 +74,7 @@ public class FileIO implements FileIOInterface {
 
                         }
                         if (user.getLoginId().toLowerCase().equals(loginId.toLowerCase())) {
+                            System.out.println(loginId);
                             user = null;
                             return false;
                         }
