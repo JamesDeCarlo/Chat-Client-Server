@@ -14,7 +14,7 @@ import java.io.IOException;
 import javax.swing.JFrame;
 
 /**
- *
+ * 
  * @author James DeCarlo
  */
 public class ChatWindow extends javax.swing.JFrame implements ActionListener, Runnable, KeyListener {
