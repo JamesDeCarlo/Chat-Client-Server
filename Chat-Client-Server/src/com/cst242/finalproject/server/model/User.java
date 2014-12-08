@@ -35,6 +35,20 @@ public class User implements Serializable {
     }
 
     /**
+     * Creates a new user object from a string
+     * @param fileString User string to create new user
+     */
+    public User(String fileString){        
+        String[] str = fileString.split("\t");
+        this.accountNumber = Integer.parseInt(str[0]);
+        this.loginId = str[1];
+        this.hashedPassword = Integer.parseInt(str[2]);
+        this.firstName = str[3];
+        this.lastName = str[4];
+        this.screenName = str[5];        
+    }
+    
+    /**
      * Returns the users account number
      * @return Users account number
      */
@@ -128,5 +142,25 @@ public class User implements Serializable {
      */
     public void setScreenName(String screenName) {
         this.screenName = screenName;
-    }            
+    }    
+
+    @Override
+    public String toString() {
+        StringBuilder b = new StringBuilder();
+        b.append(this.accountNumber);
+        b.append("\t");
+        b.append(this.loginId);
+        b.append("\t");
+        b.append(this.hashedPassword);
+        b.append("\t");
+        b.append(this.firstName);
+        b.append("\t");
+        b.append(this.lastName);
+        b.append("\t");
+        b.append(this.screenName);
+        b.append("\n");
+        return b.toString();
+    }
+    
+    
 }
