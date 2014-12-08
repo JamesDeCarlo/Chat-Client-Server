@@ -104,8 +104,7 @@ public class FileIO implements FileIOInterface {
                 return false;
             }
 
-            for (User u : users) {
-                System.out.println("User " + u.getLoginId());
+            for (User u : users) {                
                 writer.append(u.toString());
                 writer.flush();
             }
