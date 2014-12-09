@@ -44,7 +44,9 @@ public class Server implements WindowListener {
 
             // Start default rooms and add to list array
             rooms = new ArrayList<>();
-
+            
+            this.sleep();
+            
             ServerRoom room = new ServerRoom("All_Chat", 9091, window);
             room.start();
             rooms.add(room);
