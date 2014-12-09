@@ -26,6 +26,7 @@ public class Server implements WindowListener {
     private ServerSocket serverSocket;
 
     private List<ServerRoom> rooms;
+    
 
     /**
      * Starts the server listening on port 9090 and creates four default chat 
@@ -78,7 +79,8 @@ public class Server implements WindowListener {
         for (;;) {
             try {
                 Socket clientSocket = serverSocket.accept();
-                 new ServerThread(clientSocket, window, rooms).start();                
+                 new ServerThread(clientSocket, window, rooms).start(); 
+                 
             } catch (SocketException e) {
                 // window is closing so break from loop
                 break;
