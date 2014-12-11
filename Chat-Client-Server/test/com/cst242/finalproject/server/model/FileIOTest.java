@@ -64,7 +64,7 @@ public class FileIOTest {
     public void testUpdateUser() {
         System.out.println("updateUser");
         
-        User user = new FileIO().loginUser("test212", 6969);
+        User user = new FileIO().loginUser("test1", 6945);
         
         if(user == null){
             fail("Failed to login user");
@@ -73,15 +73,15 @@ public class FileIOTest {
         
         int accountNumber = user.getAccountNumber();
         int hashedPassword = 6969;
-        String firstName = "Jane";
-        String lastName = "Doe";
-        String screenName = "Jane_Doe";
+        String firstName = "Evan";
+        String lastName = "Vice";
+        String screenName = "EVice1";
         FileIO instance = new FileIO();
         boolean expResult = true;
         boolean result = instance.updateUser(accountNumber, hashedPassword, firstName, lastName, screenName);
         assertEquals(expResult, result);
         
-        user = new FileIO().loginUser("test212", 6969);
+        user = new FileIO().loginUser("test1", 6969);
         if(!firstName.equals(user.getFirstName()) || !screenName.equals(user.getScreenName())){
             fail("Failed to update the user");
         }
