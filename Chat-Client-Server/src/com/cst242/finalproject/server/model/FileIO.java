@@ -217,6 +217,8 @@ public class FileIO implements FileIOInterface {
                     writer.append(u.toString());
                     writer.flush();
                 }
+                
+                writer.close();
             }
 
             return false;
