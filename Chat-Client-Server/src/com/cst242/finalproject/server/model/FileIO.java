@@ -122,10 +122,10 @@ public class FileIO implements FileIOInterface {
 
             if (file.length() == 0) {
                 return null;
-            } else {
+            } 
+            else {
                 try {
                     reader = new BufferedReader(new FileReader(file));
-                    System.out.println("Stream opened");
                 } catch (IOException e) {
                     return null;
                 }
@@ -144,7 +144,7 @@ public class FileIO implements FileIOInterface {
                     }
                     reader.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    return null;
                 }
 
                 for (User u : users) {
@@ -173,12 +173,12 @@ public class FileIO implements FileIOInterface {
 
             if (file.length() == 0) {
                 return false;
-            } else {
+            } 
+            else {
                 try {
                     reader = new BufferedReader(new FileReader(file));
-                    System.out.println("Stream opened");
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    return false;
                 }
 
                 List<User> users = new ArrayList<>();
@@ -195,7 +195,7 @@ public class FileIO implements FileIOInterface {
                     }
                     reader.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    return false;
                 }
 
                 for (User u : users) {
@@ -210,7 +210,7 @@ public class FileIO implements FileIOInterface {
                 try {
                     writer = new PrintWriter(file);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    return false;
                 }
 
                 for (User u : users) {
@@ -219,9 +219,8 @@ public class FileIO implements FileIOInterface {
                 }
                 
                 writer.close();
+                return true;
             }
-
-            return false;
         }
     }
 
