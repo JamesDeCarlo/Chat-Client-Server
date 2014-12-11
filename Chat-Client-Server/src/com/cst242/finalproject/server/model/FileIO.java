@@ -111,9 +111,54 @@ public class FileIO implements FileIOInterface {
     @Override
     public User loginUser(String loginId, int hashedPassword
     ) {
-        User user = new User(1001, "JohnDoe", 6969, "John", "Doe", "SomeGuy");
-
-        return user;
+        User loginUser;
+        
+        File file = new File("userList.dat");
+        
+        if(!file.exists()){
+            return null;
+        }
+        
+        if(file.length() == 0){
+            return null;
+        }
+        
+        else{
+            try{
+                reader = new BufferedReader(new FileReader(file));
+                System.out.println("Stream opened");
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+            
+            List<User> users = new ArrayList<>();
+            
+            String line = "";
+            
+            try{
+                while((line = reader.readLine()) != null){
+                    if(!line.equals("")){
+                        User u = new User(line.trim());
+                        users.add(u);
+                    }
+                    
+                }
+                reader.close();
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+            
+            
+            for(User u : users){
+                if(u.getLoginId().toLowerCase().equals(loginId.toLowerCase()) &&
+                        u.getHashedPassword() == hashedPassword){
+                    return u;
+                }
+               
+            }
+        }
+    
+        return null;
     }
 
     @Override
