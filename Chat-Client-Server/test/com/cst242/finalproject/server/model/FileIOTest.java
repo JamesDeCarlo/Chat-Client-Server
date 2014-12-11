@@ -23,7 +23,7 @@ public class FileIOTest {
     @Test
     public void testRegister() {
         System.out.println("register");
-        String loginId = "test1";
+        String loginId = "test25";
         int hashedPassword = 6973;
         String firstName = "Tom";
         String lastName = "Jones";
@@ -48,8 +48,8 @@ public class FileIOTest {
         User result = instance.loginUser(loginId, hashedPassword);
         assertEquals(expResult, result);
         
-        loginId = "test212";
-        hashedPassword = 6969;
+        loginId = "test25";
+        hashedPassword = 6973;
         
         if(instance.loginUser(loginId, hashedPassword) == null){
             fail("Login Failed");
