@@ -98,6 +98,9 @@ public class ServerThread extends Thread {
         } else if (request[0].equals("CREATE_ROOM")) {
             this.createRoom(request);
         }
+        else if (request[0].equals("UPDATE")){
+            this.updateUser(request);
+        }
     }
 
     /**
@@ -154,6 +157,22 @@ public class ServerThread extends Thread {
             }
         } catch (IOException e) {
             window.appendLog("Failed to send login message to client : %s%n", new Date());
+        }
+    }
+    
+    /**
+     * Sends success or failed if the user is updated.
+     * 
+     * @param request the request array
+     */
+    public void updateUser(String[] request){
+        try{
+            if(request.length != 6){
+                toClient.writeUTF("Failed");
+                return;
+            }
+        }catch(Exception e){
+            
         }
     }
 
