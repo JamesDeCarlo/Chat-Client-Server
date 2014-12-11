@@ -61,7 +61,7 @@ public class FileIO implements FileIOInterface {
 
                 List<User> users = new ArrayList<>();
 
-                String line = "";
+                String line;
                 try {
                     while ((line = reader.readLine()) != null) {
                         if (!line.equals("")) {
@@ -183,7 +183,7 @@ public class FileIO implements FileIOInterface {
 
                 List<User> users = new ArrayList<>();
 
-                String line = "";
+                String line;
 
                 try {
                     while ((line = reader.readLine()) != null) {
