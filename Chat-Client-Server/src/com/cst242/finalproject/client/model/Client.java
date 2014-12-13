@@ -105,7 +105,29 @@ public class Client {
      * @param user With all fields entered no {@code null} values allowed
      * @return {@code true} if user was updated successfully.
      */
-    public boolean updateUser(User user){
+    public boolean updateUser(User user) throws IOException{
+        //Creates message to send to server
+        StringBuilder msg = new StringBuilder();
+        msg.append("UPDATE ");
+        msg.append(user.getAccountNumber());
+        msg.append(" ");
+        msg.append(user.getHashedPassword());
+        msg.append(" ");
+        msg.append(user.getFirstName());
+        msg.append(" ");
+        msg.append(user.getLastName());
+        msg.append(" ");
+        msg.append(user.getScreenName());
+        
+        this.toServer.writeUTF(msg.toString());
+        
+        String returnMsg[] = Helper.splitString(this.fromServer.readUTF());
+        if (returnMsg[0].equals("SUCCESS")) {
+            return true;
+        }
+        else if(returnMsg[0].equals("FAILED")) {
+            return false;
+        }
         return false;
     }
     

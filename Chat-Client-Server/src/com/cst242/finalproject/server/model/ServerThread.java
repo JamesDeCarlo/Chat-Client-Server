@@ -50,6 +50,7 @@ public class ServerThread extends Thread {
                 // Start listening for request
                 String request = fromClient.readUTF();
                 this.processRequest(Helper.splitString(request));
+                
             }
 
         } catch (IOException ex) {
@@ -97,8 +98,7 @@ public class ServerThread extends Thread {
             this.getRooms(request);
         } else if (request[0].equals("CREATE_ROOM")) {
             this.createRoom(request);
-        }
-        else if (request[0].equals("UPDATE")){
+        } else if (request[0].equals("UPDATE")){
             this.updateUser(request);
         }
     }
@@ -166,15 +166,33 @@ public class ServerThread extends Thread {
      * @param request the request array
      */
     public void updateUser(String[] request){
-        try{
-            if(request.length != 6){
-                toClient.writeUTF("Failed");
-                return;
-            }
-        }catch(Exception e){
-            
-        }
-    }
+        FileIO fileIO = new FileIO();
+        try {
+            if(request.length == 6 & fileIO.updateUser(Integer.parseInt(request[1]), Integer.parseInt(request[2]), request[3], 
+                    request[4], request[5])){
+                   
+                    StringBuilder retmsg = new StringBuilder();
+                    retmsg.append("SUCCESS ");
+                    retmsg.append(request[1]);
+                    retmsg.append(" ");
+                    retmsg.append(request[2]);
+                    retmsg.append(" ");
+                    retmsg.append(request[3]);
+                    retmsg.append(" ");
+                    retmsg.append(request[4]);
+                    retmsg.append(" ");
+                    retmsg.append(request[5]);
+                    window.appendLog("%s has been updated : %s%n", request[5], new Date());
+                    toClient.writeUTF(retmsg.toString());
+                } else {
+                    toClient.writeUTF("FAILED");
+                } 
+
+            }catch(IOException e) 
+        {
+            window.appendLog("Failed to send update client: %s%n", new Date());            
+        } 
+}        
 
     /**
      * Sends the list of available rooms to the user.

@@ -29,7 +29,7 @@ public class FileIOTest {
         String lastName = "Jones";
         String screenName = "Tom_Jones";
         FileIO instance1 = new FileIO();
-        boolean expResult = true;
+        boolean expResult = false;
         boolean result = instance1.register(loginId, hashedPassword, firstName, lastName, screenName);
         assertEquals(expResult, result);        
     }    
@@ -48,12 +48,12 @@ public class FileIOTest {
         User result = instance.loginUser(loginId, hashedPassword);
         assertEquals(expResult, result);
         
+        System.out.println("loginUser2");
         loginId = "test25";
         hashedPassword = 6973;
         
-        if(instance.loginUser(loginId, hashedPassword) == null){
-            fail("Login Failed");
-        }
+        result = instance.loginUser(loginId, hashedPassword);
+        assertEquals(expResult, result);        
         
     }
 
@@ -64,24 +64,19 @@ public class FileIOTest {
     public void testUpdateUser() {
         System.out.println("updateUser");
         
-        User user = new FileIO().loginUser("test1", 6945);
-        
-        if(user == null){
-            fail("Failed to login user");
-            
-        }
+        User user = new FileIO().loginUser("test25", 6955);
         
         int accountNumber = user.getAccountNumber();
-        int hashedPassword = 6969;
-        String firstName = "Evan";
-        String lastName = "Vice";
-        String screenName = "EVice1";
+        int hashedPassword = 6955;
+        String firstName = "Evan111";
+        String lastName = "Vice111";
+        String screenName = "EVice255";
         FileIO instance = new FileIO();
         boolean expResult = true;
         boolean result = instance.updateUser(accountNumber, hashedPassword, firstName, lastName, screenName);
         assertEquals(expResult, result);
         
-        user = new FileIO().loginUser("test1", 6969);
+        user = new FileIO().loginUser("test25", 6955);
         if(!firstName.equals(user.getFirstName()) || !screenName.equals(user.getScreenName())){
             fail("Failed to update the user");
         }

@@ -308,10 +308,65 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             this.primaryPanel.setVisible(true);
 
         } else if (e.getActionCommand().equals("prefSubmit")) {
-            // check that all fields except pass and confirm are valid
-            // check if pass text field has text if so check confirm and update user object password
+            String password = this.prefPanel.getTxtPassword().getText().trim();
+            String confirm = this.prefPanel.getTxtConfirm().getText().trim();
+            String firstName = this.prefPanel.getTxtFirstName().getText().trim();
+            String lastName = this.prefPanel.getTxtLastName().getText().trim();
+            String screenName = this.prefPanel.getTxtScreenName().getText().trim();
+            
+            // Check for blanks
+            if (!Helper.validateInput(firstName) | !Helper.validateInput(lastName) | !Helper.validateInput(screenName)
+                    | !Helper.validateInput(password) | !Helper.validateInput(confirm)) 
+            {
+                this.showInputAlertMsgBox();
+                this.prefPanel.getTxtFirstName().requestFocus();
+            } else if (!password.equals(confirm)) {
+                this.showPassConfirmAlertMsgBox();
+                this.prefPanel.getTxtPassword().requestFocus();
+                } else {
+                
+                int accountNumber = this.user.getAccountNumber();
+                User updateUser = new User();
+                updateUser.setAccountNumber(accountNumber);
+                updateUser.setHashedPassword(password);
+                updateUser.setFirstName(firstName);
+                updateUser.setLastName(lastName);
+                updateUser.setScreenName(screenName);
 
-            // send update message to the server
+                Boolean updated;
+                try {
+                    // open connection to the server
+                    client = new Client(HOST, PORT);
+ 
+                    // update user
+                    updated = client.updateUser(updateUser);
+
+                    // close connection and sockets
+                    client.close();
+
+                } catch (IOException ex) {
+                    this.showAlertMsgBox("Server not available.\n Please try again later");
+                    this.prefPanel.getTxtPassword().setText("");
+                    this.prefPanel.getTxtConfirm().setText("");
+                    this.prefPanel.setVisible(false);
+                    this.statusPanel.setVisible(true);
+                    return;
+                }
+                if (updated) {
+                    this.showAlertMsgBox("Your preferences have been updated.");
+                    this.statusPanel.getLblGreeting().setText(String.format("Hello %s %s", updateUser.getFirstName(), updateUser.getLastName()));
+                    this.statusPanel.getLblScreenName().setText(String.format("Screen name: %s", updateUser.getScreenName()));
+                    this.prefPanel.getTxtFirstName().setText(user.getFirstName());
+                    this.prefPanel.getTxtLastName().setText(user.getLastName());
+                    this.prefPanel.getTxtScreenName().setText(user.getScreenName());
+                    this.prefPanel.setVisible(false);
+                    this.statusPanel.setVisible(true);
+                } else {
+                    this.showAlertMsgBox("You didn't change anything");
+                    this.prefPanel.getTxtFirstName().requestFocus();
+                }
+            }
+            
         } else if (e.getActionCommand().equals("prefCancel")) {
             // hide preferences panel show status panel
             this.prefPanel.setVisible(false);
