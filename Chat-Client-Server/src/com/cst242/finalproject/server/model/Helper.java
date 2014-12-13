@@ -1,7 +1,5 @@
 package com.cst242.finalproject.server.model;
 
-import com.cst242.finalproject.client.model.*;
-
 /**
  * This class is a assortment of static methods for validations and various
  * other methods as needed.
