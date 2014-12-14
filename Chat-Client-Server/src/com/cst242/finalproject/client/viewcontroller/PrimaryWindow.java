@@ -274,15 +274,11 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             this.primaryPanel.setVisible(true);
 
         } else if (e.getActionCommand().equals("statusPreferences")) {
-            // Load prefernces panel text fields except for pass and confirm with data from user object
-            this.prefPanel.getTxtLoginId().setText(user.getLoginId());
-            this.prefPanel.getTxtFirstName().setText(user.getFirstName());
-            this.prefPanel.getTxtLastName().setText(user.getLastName());
-            this.prefPanel.getTxtScreenName().setText(user.getScreenName());
-
             // Display preferences panel hide staus panel
             this.statusPanel.setVisible(false);
+            this.prefPanel.getTxtLoginId().setText(user.getLoginId());
             this.prefPanel.setVisible(true);
+            
 
         } else if (e.getActionCommand().equals("statusSelectRooms")) {
             
@@ -323,7 +319,8 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             } else if (!password.equals(confirm)) {
                 this.showPassConfirmAlertMsgBox();
                 this.prefPanel.getTxtPassword().requestFocus();
-                } else {
+                } 
+            else {
                 
                 int accountNumber = this.user.getAccountNumber();
                 User updateUser = new User();
@@ -337,13 +334,9 @@ public class PrimaryWindow extends JFrame implements ActionListener {
                 try {
                     // open connection to the server
                     client = new Client(HOST, PORT);
- 
                     // update user
                     updated = client.updateUser(updateUser);
-
-                    // close connection and sockets
-                    client.close();
-
+                    
                 } catch (IOException ex) {
                     this.showAlertMsgBox("Server not available.\n Please try again later");
                     this.prefPanel.getTxtPassword().setText("");
@@ -356,9 +349,9 @@ public class PrimaryWindow extends JFrame implements ActionListener {
                     this.showAlertMsgBox("Your preferences have been updated.");
                     this.statusPanel.getLblGreeting().setText(String.format("Hello %s %s", updateUser.getFirstName(), updateUser.getLastName()));
                     this.statusPanel.getLblScreenName().setText(String.format("Screen name: %s", updateUser.getScreenName()));
-                    this.prefPanel.getTxtFirstName().setText(user.getFirstName());
-                    this.prefPanel.getTxtLastName().setText(user.getLastName());
-                    this.prefPanel.getTxtScreenName().setText(user.getScreenName());
+                    this.prefPanel.getTxtFirstName().setText(updateUser.getFirstName());
+                    this.prefPanel.getTxtLastName().setText(updateUser.getLastName());
+                    this.prefPanel.getTxtScreenName().setText(updateUser.getScreenName());   
                     this.prefPanel.setVisible(false);
                     this.statusPanel.setVisible(true);
                 } else {

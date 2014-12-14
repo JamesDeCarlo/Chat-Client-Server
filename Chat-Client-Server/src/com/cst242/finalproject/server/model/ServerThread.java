@@ -151,7 +151,7 @@ public class ServerThread extends Thread {
 
                     toClient.writeUTF(retmsg.toString());
 
-                    window.appendLog("User %s loged in to the chat server: %s%n", user.getLoginId(), new Date());
+                    window.appendLog("User '%s' loged in to the chat server: %s%n", user.getLoginId(), new Date());
                 }
                 toClient.flush();
             }
@@ -169,8 +169,8 @@ public class ServerThread extends Thread {
         FileIO fileIO = new FileIO();
         try {
             if(request.length == 6 & fileIO.updateUser(Integer.parseInt(request[1]), Integer.parseInt(request[2]), request[3], 
-                    request[4], request[5])){
-                   
+                    request[4], request[5])) {
+                
                     StringBuilder retmsg = new StringBuilder();
                     retmsg.append("SUCCESS ");
                     retmsg.append(request[1]);
@@ -182,15 +182,12 @@ public class ServerThread extends Thread {
                     retmsg.append(request[4]);
                     retmsg.append(" ");
                     retmsg.append(request[5]);
-                    window.appendLog("%s has been updated : %s%n", request[5], new Date());
                     toClient.writeUTF(retmsg.toString());
-                } else {
-                    toClient.writeUTF("FAILED");
-                } 
+            }         
+            window.appendLog("User '%s' has been updated to the server: %s%n" , request[5], new Date());
 
-            }catch(IOException e) 
-        {
-            window.appendLog("Failed to send update client: %s%n", new Date());            
+        } catch(IOException e){
+            window.appendLog("Failed to update client: %s%n", new Date());            
         } 
 }        
 
