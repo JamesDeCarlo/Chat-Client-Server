@@ -12,9 +12,9 @@ public class Helper {
     
     /**
      * Checks that string is not {@code null} and that it contains no 
-     * white spaces.
+     * white spaces and no '\'.
      * @param str the string to check
-     * @return {@code true} if the string is not empty and has no spaces
+     * @return {@code true} if the string is not empty and has no spaces and '\'
      */
     public static boolean validateInput(String str){
         if(str == null || str.length() == 0){
@@ -23,12 +23,11 @@ public class Helper {
         
         int strLen = str.length();
         for(int i = 0; i < strLen; i++){
-            if(Character.isWhitespace(str.charAt(i))){
+            char c = str.charAt(i);
+            if(Character.isWhitespace(c) || c == '\\'){
                 return false;
             }
-        }
-        
-        
+        }               
         return true;
     }
     
