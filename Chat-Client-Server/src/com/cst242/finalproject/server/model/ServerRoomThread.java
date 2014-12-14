@@ -6,42 +6,39 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This is the thread that handles all communications with the chat client in 
+ * This is the thread that handles all communications with the chat client in
  * the chat room.
- * 
+ *
  * @author James DeCarlo
  */
 public class ServerRoomThread extends Thread {
 
     private final PrimaryWindow window;
 
+    private final List<DataOutputStream> streams;
+
     private final Socket clientSocket;
     private DataInputStream fromClient;
     private DataOutputStream toClient;
-
-    private final ServerRoomThread[] roomThreads;
-    private final int MAX_USERS;
-    
     private final String roomName;
+    private String screenName;
 
     /**
      * Creates a new Server room thread.
-     * 
+     *
      * @param window The primary window for logging.
      * @param clientSocket The client socket created on connection.
-     * @param roomThreads The server room threads for inter thread 
-     * communication.
      * @param roomName The name of the chat room.
      */
-    public ServerRoomThread(PrimaryWindow window, Socket clientSocket, ServerRoomThread[] roomThreads, String roomName) {
+    public ServerRoomThread(PrimaryWindow window, Socket clientSocket,List<DataOutputStream> streams, String roomName) {
         this.window = window;
         this.clientSocket = clientSocket;
-        this.roomThreads = roomThreads;
-        this.MAX_USERS = roomThreads.length;
+        this.streams = streams;
         this.roomName = roomName;
     }
 
@@ -50,60 +47,33 @@ public class ServerRoomThread extends Thread {
         try {
             fromClient = new DataInputStream(clientSocket.getInputStream());
             toClient = new DataOutputStream(clientSocket.getOutputStream());
-        } catch (IOException e) {
 
-            // remove thread from list and close streams
+            // add output stream for broadcasting
             synchronized (this) {
-                for (int i = 0; i < this.MAX_USERS; i++) {
-                    if (roomThreads[i] == this) {
-                        roomThreads[i] = null;
-                    }
-                }
+                streams.add(toClient);
             }
+            
+            window.appendLog("Client connected to room %s: %s%n", this.roomName, new Date());
 
-            window.appendLog("Failed to create client data streams in chat room: %s%n", new Date());
-            try {
-                clientSocket.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ServerRoomThread.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return;
-        }
-
-        window.appendLog("Client connected to Room %s: %s%n", this.roomName, new Date());
-        
-        // loop and wait for message then broadcast to clients in all threads
-        try {
+            // loop and wait for message then broadcast to clients in all threads
             for (;;) {
                 String msg = fromClient.readUTF();
-
-                synchronized (this) {
-                    for (int i = 0; i < this.MAX_USERS; i++) {
-                        if (roomThreads[i] != null) {
-                            roomThreads[i].toClient.writeUTF(msg);
-                        }
-                    }
-                }
-
+                this.broadcastMessage(msg);
             }
-        } catch (IOException ex) {
-            // remove thread from list and close streams
-            synchronized (this) {
-                for (int i = 0; i < this.MAX_USERS; i++) {
-                    if (roomThreads[i] == this) {
-                        roomThreads[i] = null;
-                    }
-                }
-            }
-            try {
-                this.fromClient.close();
-                this.toClient.close();
-                this.clientSocket.close();
-            } catch (IOException e) {
-                // Do nothing here
+
+        } catch (IOException e) {
+            // do nothing
+        } finally {
+            this.shutDown();
+        }
+    }
+
+    private void broadcastMessage(String msg) throws IOException {
+        synchronized (this) {
+            for (DataOutputStream s : streams) {
+                s.writeUTF(msg);
             }
         }
-
     }
 
     /**
@@ -112,12 +82,32 @@ public class ServerRoomThread extends Thread {
      * the chat room.
      */
     public void shutDown() {
+
+        if (this.toClient != null) {
+            streams.remove(this.toClient);
+        }
+
         try {
-            this.fromClient.close();
-            this.toClient.close();
-            this.clientSocket.close();
+            if (this.fromClient != null) {
+                this.fromClient.close();
+            }
+            if (this.toClient != null) {
+                this.toClient.close();
+            }
+            if (this.clientSocket != null) {
+                this.clientSocket.close();
+            }
         } catch (IOException e) {
             // do nothing
+        }
+        window.appendLog("Client disconected from room %s: %s%n", this.roomName, new Date());
+    }
+
+    public void sleep() {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServerRoomThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
