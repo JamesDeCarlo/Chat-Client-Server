@@ -8,21 +8,22 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.IOException;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 
 /**
  * This class is the main GUI for the chat room.
- * 
+ *
  * @author James DeCarlo
  */
-public class ChatWindow extends javax.swing.JFrame implements ActionListener, Runnable, KeyListener {
+public class ChatWindow extends javax.swing.JFrame implements ActionListener, Runnable {
 
-    private ClientRoom room;
-    private boolean shiftPressed = false;
-    
+    private ClientRoom room;    
+
     /**
      * Creates new ChatWindow and displays it in the center of the screen.
      *
@@ -45,9 +46,6 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
         Image image = Toolkit.getDefaultToolkit().getImage("c_icon.png");
         this.setIconImage(image);
 
-        // Set focus in text box
-        this.txtInput.requestFocus();
-
         // create button listener for send button and exit button
         this.btnSend.addActionListener(this);
         this.btnExitRoom.addActionListener(this);
@@ -60,11 +58,29 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
             return;
         }
 
-        
-        this.txtInput.addKeyListener(this);
 
         Thread thread = new Thread(this);
         thread.start();
+
+        
+        //  Map input keys so that ENTER will perform a send
+        //  and shift-ENTER will insert a line break.
+        InputMap inpMap = this.txtInput.getInputMap();
+        KeyStroke enter = KeyStroke.getKeyStroke("ENTER");
+        KeyStroke shiftEnter = KeyStroke.getKeyStroke("shift ENTER");
+        inpMap.put(shiftEnter, "insert-break");
+        inpMap.put(enter, "text-send");
+
+        ActionMap actMap = this.txtInput.getActionMap();
+        actMap.put("text-send", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                sendMessage();
+            }
+        });
+        
+        // Set focus in text box
+        this.txtInput.requestFocus();
 
     }
 
@@ -157,7 +173,7 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Send")) {
             this.sendMessage();
-            
+
         } else if (e.getActionCommand().equals("Exit Room")) {
             // close sockets and streams
             if (this.room != null) {
@@ -169,22 +185,22 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
         }
     }
 
-    private void sendMessage(){
+    private void sendMessage() {
         try {
-                // send message
-                this.room.sendMessage(this.txtInput.getText());
-            } catch (IOException ex) {
-                this.txtChatDisplay.append("Chat room closed\n");
-                this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
-            }
+            // send message
+            this.room.sendMessage(this.txtInput.getText());
+        } catch (IOException ex) {
+            this.txtChatDisplay.append("Chat room closed\n");
+            this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
+        }
 
-            // clear the text box
-            this.txtInput.setText("");
+        // clear the text box
+        this.txtInput.setText("");
 
-            // set focus back to input text box
-            this.txtInput.requestFocus();
+        // set focus back to input text box
+        this.txtInput.requestFocus();
     }
-    
+
     @Override
     public void run() {
         try {
@@ -213,31 +229,4 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
         }
 
     }
-
-    @Override
-    public void keyTyped(java.awt.event.KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER){
-            if(shiftPressed){
-                this.txtInput.append("\n");
-            } else {
-                this.sendMessage();
-            }
-        }
-    }
-
-    @Override
-    public void keyPressed(java.awt.event.KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_SHIFT){
-            this.shiftPressed = true;
-        }
-    }
-
-    @Override
-    public void keyReleased(java.awt.event.KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_SHIFT){
-            this.shiftPressed = false;
-        }
-    }
-    
-    
 }
