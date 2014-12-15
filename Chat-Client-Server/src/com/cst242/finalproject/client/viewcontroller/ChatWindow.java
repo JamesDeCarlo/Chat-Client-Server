@@ -25,6 +25,7 @@ import javax.swing.KeyStroke;
 public class ChatWindow extends javax.swing.JFrame implements ActionListener, Runnable, WindowListener {
 
     private ClientRoom room;
+    private boolean running = true;
 
     /**
      * Creates new ChatWindow and displays it in the center of the screen.
@@ -210,6 +211,8 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
             this.room.close();
         }
 
+        this.running = false;
+
         // destroy window
         this.dispose();
     }
@@ -217,10 +220,10 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
     @Override
     public void run() {
         try {
-            for (;;) {
+            while (running) {
 
                 String msg = room.receiveMessage();
-                this.txtChatDisplay.append("-------------------------------------------------------------------------------------------------\n");
+                this.txtChatDisplay.append("--------------------------------------------------------------------------------------------------------------------------------------\n");
 
                 String[] arr = msg.split("\\s+", 2);
 
@@ -238,6 +241,7 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
                     this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
 
                 }
+
             }
         } catch (IOException e) {
             this.txtChatDisplay.append("Chat room closed\n");
