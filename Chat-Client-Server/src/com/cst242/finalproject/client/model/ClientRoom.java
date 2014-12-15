@@ -46,6 +46,7 @@ public class ClientRoom {
      */
     public final void sendMessage(String msg) throws IOException{
         this.toServer.writeUTF(String.format("MESSAGE %s %s", user.getScreenName(), msg));
+        this.toServer.flush();
     }
     
     /**

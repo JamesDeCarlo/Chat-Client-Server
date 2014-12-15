@@ -223,7 +223,7 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
             while (running) {
 
                 String msg = room.receiveMessage();
-                this.txtChatDisplay.append("--------------------------------------------------------------------------------------------------------------------------------------\n");
+                this.txtChatDisplay.append("-------------");
 
                 String[] arr = msg.split("\\s+", 2);
 
