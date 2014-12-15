@@ -26,9 +26,9 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 /**
- * This class is the main GUI for the chat client. This class displays and 
+ * This class is the main GUI for the chat client. This class displays and
  * controls all the panels in this package.
- * 
+ *
  * @author James DeCarlo
  */
 public class PrimaryWindow extends JFrame implements ActionListener {
@@ -49,10 +49,10 @@ public class PrimaryWindow extends JFrame implements ActionListener {
     private Client client;
     private User user;
 
-    private List<Room> rooms ;
+    private List<Room> rooms;
     private DefaultListModel listModel;
     private final List<JFrame> chatWindows;
-    
+
     /**
      * Sets up the JFrame and all of the panels to be used in the main GUI.
      */
@@ -135,7 +135,6 @@ public class PrimaryWindow extends JFrame implements ActionListener {
         this.cnrPanel.setVisible(false);
         framePanel.add(this.cnrPanel);
 
-        
         // Initialize variables
         this.chatWindows = new ArrayList<>();
     }
@@ -281,24 +280,22 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             this.prefPanel.getTxtLastName().setText(user.getLastName());
             this.prefPanel.getTxtScreenName().setText(user.getScreenName());
             this.prefPanel.setVisible(true);
-            
 
         } else if (e.getActionCommand().equals("statusSelectRooms")) {
-            
-            
+
             //display select rooms panel hide status panel
             this.statusPanel.setVisible(false);
             this.srPanel.setVisible(true);
 
             // Add list of rooms to the list box in select rooms panel            
-            this.updateRoomsList();            
+            this.updateRoomsList();
 
         } else if (e.getActionCommand().equals("statusLogout")) {
             // remove user from all chat rooms
-            for(JFrame win: this.chatWindows){
+            for (JFrame win : this.chatWindows) {
                 win.dispose();
             }
-            
+
             // close sockets and streams
             client.close();
 
@@ -312,25 +309,21 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             String firstName = this.prefPanel.getTxtFirstName().getText().trim();
             String lastName = this.prefPanel.getTxtLastName().getText().trim();
             String screenName = this.prefPanel.getTxtScreenName().getText().trim();
-            
+
             // Check for blanks
-            if (!Helper.validateInput(firstName) | !Helper.validateInput(lastName) | !Helper.validateInput(screenName)) 
-            {
+            if (!Helper.validateInput(firstName) | !Helper.validateInput(lastName) | !Helper.validateInput(screenName)) {
                 this.showInputAlertMsgBox();
                 this.prefPanel.getTxtFirstName().requestFocus();
-            } 
-            else {
-                
+            } else {
+
                 int accountNumber = this.user.getAccountNumber();
                 User updateUser = new User();
-                if(password.equals("")){
+                if (password.equals("")) {
                     updateUser.setHashedPassword(this.user.getHashedPassword());
-                }
-                else{
-                    if(password.equals(confirm)){
+                } else {
+                    if (password.equals(confirm)) {
                         updateUser.setHashedPassword(password);
-                    }
-                    else{
+                    } else {
                         this.showPassConfirmAlertMsgBox();
                         return;
                     }
@@ -340,36 +333,29 @@ public class PrimaryWindow extends JFrame implements ActionListener {
                 updateUser.setLastName(lastName);
                 updateUser.setScreenName(screenName);
 
-                Boolean updated;
+                boolean updated;
+
                 try {
-                    // open connection to the server
-                    client = new Client(HOST, PORT);
-                    // update user
                     updated = client.updateUser(updateUser);
-                    
                 } catch (IOException ex) {
-                    this.showAlertMsgBox("Server not available.\n Please try again later");
-                    this.prefPanel.getTxtPassword().setText("");
-                    this.prefPanel.getTxtConfirm().setText("");
-                    this.prefPanel.setVisible(false);
-                    this.statusPanel.setVisible(true);
-                    return;
+                    updated = false;
                 }
+
                 if (updated) {
-                    this.showAlertMsgBox("Your preferences have been updated.");
-                    this.statusPanel.getLblGreeting().setText(String.format("Hello %s %s", updateUser.getFirstName(), updateUser.getLastName()));
-                    this.statusPanel.getLblScreenName().setText(String.format("Screen name: %s", updateUser.getScreenName()));
-                    this.prefPanel.getTxtFirstName().setText(updateUser.getFirstName());
-                    this.prefPanel.getTxtLastName().setText(updateUser.getLastName());
-                    this.prefPanel.getTxtScreenName().setText(updateUser.getScreenName());   
+                    user = updateUser;
+                    this.showAlertMsgBox("Information Updated Successfully!");
                     this.prefPanel.setVisible(false);
+                    this.statusPanel.getLblGreeting().setText(String.format("Hello %s %s", user.getFirstName(), user.getLastName()));
+                    this.statusPanel.getLblScreenName().setText(String.format("Screen name: %s ", user.getScreenName()));
                     this.statusPanel.setVisible(true);
-                } else {
-                    this.showAlertMsgBox("You didn't change anything");
+                }
+                else{
+                    this.showAlertMsgBox("Update Failed. Try again later");
                     this.prefPanel.getTxtFirstName().requestFocus();
                 }
+
             }
-            
+
         } else if (e.getActionCommand().equals("prefCancel")) {
             // hide preferences panel show status panel
             this.prefPanel.setVisible(false);
@@ -377,74 +363,74 @@ public class PrimaryWindow extends JFrame implements ActionListener {
 
         } else if (e.getActionCommand().equals("selectRoomsEnter")) {
             // Check if something is selected if not display dialog
-            if(this.srPanel.getLstSelectRoom().getSelectedIndex() == -1){
+            if (this.srPanel.getLstSelectRoom().getSelectedIndex() == -1) {
                 this.showAlertMsgBox("You must select a room first");
                 return;
             }
-            
+
             // Remove room from the list and start new chat window
-            String selected = (String)this.srPanel.getLstSelectRoom().getSelectedValue();
+            String selected = (String) this.srPanel.getLstSelectRoom().getSelectedValue();
             Room room = null;
-            
-            for(Room r: this.rooms){
-                if(r.getRoomName().equals(selected)){
+
+            for (Room r : this.rooms) {
+                if (r.getRoomName().equals(selected)) {
                     room = r;
                 }
             }
-            
+
             @SuppressWarnings("null")
             JFrame chatWindow = new ChatWindow(room.getRoomName(), HOST, room.getPort(), user);
-            
+
             chatWindow.addWindowListener(new WindowListener() {
 
                 @Override
                 public void windowOpened(WindowEvent e) {
-                    
+
                 }
 
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    
+
                 }
 
                 @Override
                 public void windowClosed(WindowEvent e) {
-                    for(int i = 0; i < chatWindows.size(); i++){
-                        if(!chatWindows.get(i).isShowing()){
+                    for (int i = 0; i < chatWindows.size(); i++) {
+                        if (!chatWindows.get(i).isShowing()) {
                             chatWindows.remove(i);
                         }
                     }
-                    
+
                     // upadate the list
                     updateRoomsList();
                 }
 
                 @Override
                 public void windowIconified(WindowEvent e) {
-                    
+
                 }
 
                 @Override
                 public void windowDeiconified(WindowEvent e) {
-                    
+
                 }
 
                 @Override
                 public void windowActivated(WindowEvent e) {
-                    
+
                 }
 
                 @Override
                 public void windowDeactivated(WindowEvent e) {
-                    
+
                 }
             });
             this.chatWindows.add(chatWindow);
-            
+
             chatWindow.setVisible(true);
-            
+
             this.updateRoomsList();
-            
+
         } else if (e.getActionCommand().equals("selectRoomsCancel")) {
             // hide select rooms panel show status panel
             this.srPanel.setVisible(false);
@@ -461,17 +447,17 @@ public class PrimaryWindow extends JFrame implements ActionListener {
 
         } else if (e.getActionCommand().equals("createNewRoomCreateRoom")) {
             // check if input is valid
-            if(!Helper.validateInput(this.cnrPanel.getTxtRoomName().getText().trim())){
+            if (!Helper.validateInput(this.cnrPanel.getTxtRoomName().getText().trim())) {
                 this.showInputAlertMsgBox();
                 this.cnrPanel.getTxtRoomName().requestFocus();
                 return;
             }
-            
+
             try {
-                if(client.createRoom(this.cnrPanel.getTxtRoomName().getText().trim(), user)){
+                if (client.createRoom(this.cnrPanel.getTxtRoomName().getText().trim(), user)) {
                     this.showAlertMsgBox("Room Created Successfully.");
-                    
-                    this.cnrPanel.getTxtRoomName().setText("");                    
+
+                    this.cnrPanel.getTxtRoomName().setText("");
                     this.cnrPanel.setVisible(false);
                     this.srPanel.setVisible(true);
                     this.updateRoomsList();
@@ -480,11 +466,11 @@ public class PrimaryWindow extends JFrame implements ActionListener {
                     this.cnrPanel.getTxtRoomName().requestFocus();
                 }
             } catch (IOException ex) {
-               this.showAlertMsgBox("Server not available.\n Please try again later");
-               this.cnrPanel.setVisible(false);
-               this.primaryPanel.setVisible(true);
+                this.showAlertMsgBox("Server not available.\n Please try again later");
+                this.cnrPanel.setVisible(false);
+                this.primaryPanel.setVisible(true);
             }
-            
+
         } else if (e.getActionCommand().equals("createNewRoomCancel")) {
             // clear text box 
             this.cnrPanel.getTxtRoomName().setText("");
@@ -492,7 +478,7 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             // hide create new room panel and show select rooms panel
             this.cnrPanel.setVisible(false);
             this.srPanel.setVisible(true);
-            
+
             // updated the room list in case another user has added a room
             this.updateRoomsList();
         }
@@ -523,24 +509,24 @@ public class PrimaryWindow extends JFrame implements ActionListener {
         try {
             // query the server for room list
             rooms = client.getRegisteredRooms(user);
-            
+
             // Create default list model and populate
             listModel = new DefaultListModel();
-            
-            for(Room room: rooms){                
+
+            for (Room room : rooms) {
                 listModel.addElement(room.getRoomName());
-            }                        
-            
-            for(int i = 0; i < listModel.getSize(); i++){
-                for(JFrame cw: this.chatWindows){
-                    if(cw.getTitle().equals(listModel.get(i))){
+            }
+
+            for (int i = 0; i < listModel.getSize(); i++) {
+                for (JFrame cw : this.chatWindows) {
+                    if (cw.getTitle().equals(listModel.get(i))) {
                         listModel.remove(i);
                     }
                 }
             }
-            
+
             this.srPanel.getLstSelectRoom().setModel(listModel);
-            
+
         } catch (IOException e) {
             // server disconected go back to the login screen
             this.showAlertMsgBox("Server not available.\n Please try again later");
