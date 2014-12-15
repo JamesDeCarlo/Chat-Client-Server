@@ -45,7 +45,7 @@ public class ClientRoom {
      * @throws java.io.IOException if disconnected from chat room
      */
     public final void sendMessage(String msg) throws IOException{
-        this.toServer.writeUTF(String.format("MESSAGE %s %s", user.getScreenName(), msg));
+        this.toServer.writeUTF(String.format(">>>> %s %s%n%s%n", user.getScreenName(), Helper.currentTimeStamp(), msg));
         this.toServer.flush();
     }
     

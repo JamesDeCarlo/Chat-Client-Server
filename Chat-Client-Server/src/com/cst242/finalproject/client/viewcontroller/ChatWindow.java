@@ -220,28 +220,10 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
     @Override
     public void run() {
         try {
-            while (running) {
-
+            while (running) {                
                 String msg = room.receiveMessage();
-                this.txtChatDisplay.append("--------------------------------------------------------------------------------------------------------------------------------\n");
-
-                String[] arr = msg.split("\\s+", 2);
-
-                if (arr[0].equals("MESSAGE")) {
-                    arr = arr[1].split("\\s+", 2);
-
-                    msg = String.format(">>>> %s %s:%n", arr[0], Helper.currentTimeStamp());
-
-                    this.txtChatDisplay.append(msg);
-
-                    msg = String.format("%s%n", arr[1]);
-
-                    this.txtChatDisplay.append(msg);
-
-                    this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
-
-                }
-
+                this.txtChatDisplay.append(msg);
+                this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());                
             }
         } catch (IOException e) {
             this.txtChatDisplay.append("Chat room closed\n");
