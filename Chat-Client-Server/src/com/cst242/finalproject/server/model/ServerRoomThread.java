@@ -34,7 +34,7 @@ public class ServerRoomThread extends Thread {
      * @param streams The list of data output streams of connected clients
      * @param roomName The name of the chat room.
      */
-    public ServerRoomThread(PrimaryWindow window, Socket clientSocket,List<DataOutputStream> streams, String roomName) {
+    public ServerRoomThread(PrimaryWindow window, Socket clientSocket, List<DataOutputStream> streams, String roomName) {
         this.window = window;
         this.clientSocket = clientSocket;
         this.streams = streams;
@@ -48,10 +48,8 @@ public class ServerRoomThread extends Thread {
             toClient = new DataOutputStream(clientSocket.getOutputStream());
 
             // add output stream for broadcasting
-            
-            streams.add(toClient);
-            
-            
+            this.addStream(toClient);
+
             window.appendLog("Client connected to room %s: %s%n", this.roomName, new Date());
 
             // loop and wait for message then broadcast to clients in all threads
@@ -76,17 +74,24 @@ public class ServerRoomThread extends Thread {
         }
     }
 
+    private void addStream(DataOutputStream stream) {
+        synchronized (this) {
+            streams.add(stream);
+        }
+    }
+
     /**
      * Shuts down the server thread and all of its connections and sockets.
      * Should be called when server is shutting down or client disconnects from
      * the chat room.
      */
     public void shutDown() {
-
-        if (this.toClient != null) {
-            streams.remove(this.toClient);
+        synchronized (this) {
+            if (this.toClient != null) {
+                streams.remove(this.toClient);
+            }
         }
-
+        
         try {
             if (this.fromClient != null) {
                 this.fromClient.close();
@@ -101,5 +106,5 @@ public class ServerRoomThread extends Thread {
             // do nothing
         }
         window.appendLog("Client disconected from room %s: %s%n", this.roomName, new Date());
-    }    
+    }
 }

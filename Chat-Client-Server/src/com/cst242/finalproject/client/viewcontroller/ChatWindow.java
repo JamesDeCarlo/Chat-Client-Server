@@ -61,7 +61,7 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
         }
 
         this.addWindowListener(this);
-        
+
         Thread thread = new Thread(this);
         thread.start();
 
@@ -197,31 +197,31 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
         this.txtInput.requestFocus();
     }
 
-    private void disposeWindow(){
+    private void disposeWindow() {
         try {
-                // send logout message
-                this.room.sendMessage("Left the room");
-            } catch (IOException ex) {
-                // do nothing
-            }
-            
-            // close sockets and streams
-            if (this.room != null) {
-                this.room.close();
-            }
+            // send logout message
+            this.room.sendMessage("Left the room");
+        } catch (IOException ex) {
+            // do nothing
+        }
 
-            // destroy window
-            this.dispose();
+        // close sockets and streams
+        if (this.room != null) {
+            this.room.close();
+        }
+
+        // destroy window
+        this.dispose();
     }
-    
+
     @Override
     public void run() {
-        for (;;) {
-            try {
+        try {
+            for (;;) {
 
                 String msg = room.receiveMessage();
                 this.txtChatDisplay.append("-------------------------------------------------------------------------------------------------\n");
-                
+
                 String[] arr = msg.split("\\s+", 2);
 
                 if (arr[0].equals("MESSAGE")) {
@@ -238,17 +238,16 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
                     this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
 
                 }
-
-            } catch (IOException e) {
-                this.txtChatDisplay.append("Chat room closed\n");
-                this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
             }
+        } catch (IOException e) {
+            this.txtChatDisplay.append("Chat room closed\n");
+            this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
         }
     }
 
     @Override
     public void windowOpened(WindowEvent e) {
-        
+
     }
 
     @Override
@@ -258,26 +257,26 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
 
     @Override
     public void windowClosed(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowIconified(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowActivated(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-        
+
     }
 }
