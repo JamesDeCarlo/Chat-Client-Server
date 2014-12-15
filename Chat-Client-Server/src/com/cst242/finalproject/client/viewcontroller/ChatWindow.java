@@ -1,7 +1,6 @@
 package com.cst242.finalproject.client.viewcontroller;
 
 import com.cst242.finalproject.client.model.ClientRoom;
-import com.cst242.finalproject.client.model.Helper;
 import com.cst242.finalproject.client.model.User;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -37,7 +36,7 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
      */
     @SuppressWarnings({"LeakingThisInConstructor", "CallToThreadStartDuringObjectConstruction"})
     public ChatWindow(String roomName, String host, int port, User user) {
-        super(roomName);
+        super(roomName + " " + user.getScreenName());
         initComponents();
 
         // Center the jframe in the screen
