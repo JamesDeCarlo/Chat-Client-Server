@@ -55,8 +55,9 @@ public class ClientRoom {
      * @return the message from the server needs to be formated
      * @throws java.io.IOException if disconnected from chat room
      */
-    public String receiveMessage() throws IOException{                  
-        return this.fromServer.readUTF();
+    public String receiveMessage() throws IOException{                          
+        String msg = this.fromServer.readUTF();
+        return msg;
     }
     
      /**
