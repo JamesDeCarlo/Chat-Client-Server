@@ -104,6 +104,7 @@ public class Client {
      * 
      * @param user With all fields entered no {@code null} values allowed
      * @return {@code true} if user was updated successfully.
+     * @throws java.io.IOException thrown if server is unavailable
      */
     public boolean updateUser(User user) throws IOException{
         //Creates message to send to server
