@@ -23,8 +23,7 @@ public class ServerRoomThread extends Thread {
     private final Socket clientSocket;
     private DataInputStream fromClient;
     private DataOutputStream toClient;
-    private final String roomName;
-    private String screenName;
+    private final String roomName;    
 
     /**
      * Creates a new Server room thread.
