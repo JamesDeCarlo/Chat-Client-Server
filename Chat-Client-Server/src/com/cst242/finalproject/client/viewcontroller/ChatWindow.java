@@ -22,7 +22,7 @@ import javax.swing.KeyStroke;
  */
 public class ChatWindow extends javax.swing.JFrame implements ActionListener, Runnable {
 
-    private ClientRoom room;    
+    private ClientRoom room;
 
     /**
      * Creates new ChatWindow and displays it in the center of the screen.
@@ -58,11 +58,9 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
             return;
         }
 
-
         Thread thread = new Thread(this);
         thread.start();
 
-        
         //  Map input keys so that ENTER will perform a send
         //  and shift-ENTER will insert a line break.
         InputMap inpMap = this.txtInput.getInputMap();
@@ -78,7 +76,7 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
                 sendMessage();
             }
         });
-        
+
         // Set focus in text box
         this.txtInput.requestFocus();
 
@@ -203,8 +201,9 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
 
     @Override
     public void run() {
-        try {
-            for (;;) {
+        for (;;) {
+            try {
+
                 String msg = room.receiveMessage();
                 String[] arr = msg.split("\\s+", 2);
 
@@ -222,11 +221,11 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
                     this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
 
                 }
-            }
-        } catch (IOException e) {
-            this.txtChatDisplay.append("Chat room closed\n");
-            this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
-        }
 
+            } catch (IOException e) {
+                this.txtChatDisplay.append("Chat room closed\n");
+                this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
+            }
+        }
     }
 }
