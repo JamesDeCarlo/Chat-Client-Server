@@ -277,6 +277,9 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             // Display preferences panel hide staus panel
             this.statusPanel.setVisible(false);
             this.prefPanel.getTxtLoginId().setText(user.getLoginId());
+            this.prefPanel.getTxtFirstName().setText(user.getFirstName());
+            this.prefPanel.getTxtLastName().setText(user.getLastName());
+            this.prefPanel.getTxtScreenName().setText(user.getScreenName());
             this.prefPanel.setVisible(true);
             
 
