@@ -314,21 +314,28 @@ public class PrimaryWindow extends JFrame implements ActionListener {
             String screenName = this.prefPanel.getTxtScreenName().getText().trim();
             
             // Check for blanks
-            if (!Helper.validateInput(firstName) | !Helper.validateInput(lastName) | !Helper.validateInput(screenName)
-                    | !Helper.validateInput(password) | !Helper.validateInput(confirm)) 
+            if (!Helper.validateInput(firstName) | !Helper.validateInput(lastName) | !Helper.validateInput(screenName)) 
             {
                 this.showInputAlertMsgBox();
                 this.prefPanel.getTxtFirstName().requestFocus();
-            } else if (!password.equals(confirm)) {
-                this.showPassConfirmAlertMsgBox();
-                this.prefPanel.getTxtPassword().requestFocus();
-                } 
+            } 
             else {
                 
                 int accountNumber = this.user.getAccountNumber();
                 User updateUser = new User();
+                if(password.equals("")){
+                    updateUser.setHashedPassword(this.user.getHashedPassword());
+                }
+                else{
+                    if(password.equals(confirm)){
+                        updateUser.setHashedPassword(password);
+                    }
+                    else{
+                        this.showPassConfirmAlertMsgBox();
+                        return;
+                    }
+                }
                 updateUser.setAccountNumber(accountNumber);
-                updateUser.setHashedPassword(password);
                 updateUser.setFirstName(firstName);
                 updateUser.setLastName(lastName);
                 updateUser.setScreenName(screenName);
