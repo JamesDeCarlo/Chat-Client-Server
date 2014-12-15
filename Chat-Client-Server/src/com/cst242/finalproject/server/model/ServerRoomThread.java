@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This is the thread that handles all communications with the chat client in
@@ -33,6 +31,7 @@ public class ServerRoomThread extends Thread {
      *
      * @param window The primary window for logging.
      * @param clientSocket The client socket created on connection.
+     * @param streams The list of data output streams of connected clients
      * @param roomName The name of the chat room.
      */
     public ServerRoomThread(PrimaryWindow window, Socket clientSocket,List<DataOutputStream> streams, String roomName) {
@@ -49,9 +48,9 @@ public class ServerRoomThread extends Thread {
             toClient = new DataOutputStream(clientSocket.getOutputStream());
 
             // add output stream for broadcasting
-            synchronized (this) {
-                streams.add(toClient);
-            }
+            
+            streams.add(toClient);
+            
             
             window.appendLog("Client connected to room %s: %s%n", this.roomName, new Date());
 
@@ -72,6 +71,7 @@ public class ServerRoomThread extends Thread {
         synchronized (this) {
             for (DataOutputStream s : streams) {
                 s.writeUTF(msg);
+                s.flush();
             }
         }
     }
@@ -101,13 +101,5 @@ public class ServerRoomThread extends Thread {
             // do nothing
         }
         window.appendLog("Client disconected from room %s: %s%n", this.roomName, new Date());
-    }
-
-    public void sleep() {
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ServerRoomThread.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+    }    
 }

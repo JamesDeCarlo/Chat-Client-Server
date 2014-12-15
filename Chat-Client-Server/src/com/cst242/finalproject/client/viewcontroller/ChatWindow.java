@@ -8,6 +8,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -20,7 +22,7 @@ import javax.swing.KeyStroke;
  *
  * @author James DeCarlo
  */
-public class ChatWindow extends javax.swing.JFrame implements ActionListener, Runnable {
+public class ChatWindow extends javax.swing.JFrame implements ActionListener, Runnable, WindowListener {
 
     private ClientRoom room;
 
@@ -58,6 +60,8 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
             return;
         }
 
+        this.addWindowListener(this);
+        
         Thread thread = new Thread(this);
         thread.start();
 
@@ -173,13 +177,7 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
             this.sendMessage();
 
         } else if (e.getActionCommand().equals("Exit Room")) {
-            // close sockets and streams
-            if (this.room != null) {
-                this.room.close();
-            }
-
-            // destroy window
-            this.dispose();
+            this.disposeWindow();
         }
     }
 
@@ -199,12 +197,31 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
         this.txtInput.requestFocus();
     }
 
+    private void disposeWindow(){
+        try {
+                // send logout message
+                this.room.sendMessage("Left the room");
+            } catch (IOException ex) {
+                // do nothing
+            }
+            
+            // close sockets and streams
+            if (this.room != null) {
+                this.room.close();
+            }
+
+            // destroy window
+            this.dispose();
+    }
+    
     @Override
     public void run() {
         for (;;) {
             try {
 
                 String msg = room.receiveMessage();
+                this.txtChatDisplay.append("-------------------------------------------------------------------------------------------------\n");
+                
                 String[] arr = msg.split("\\s+", 2);
 
                 if (arr[0].equals("MESSAGE")) {
@@ -227,5 +244,40 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
                 this.txtChatDisplay.setCaretPosition(this.txtChatDisplay.getDocument().getLength());
             }
         }
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        this.disposeWindow();
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+        
     }
 }
