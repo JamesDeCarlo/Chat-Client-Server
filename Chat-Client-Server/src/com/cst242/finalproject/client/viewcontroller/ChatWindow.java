@@ -36,7 +36,7 @@ public class ChatWindow extends javax.swing.JFrame implements ActionListener, Ru
      */
     @SuppressWarnings({"LeakingThisInConstructor", "CallToThreadStartDuringObjectConstruction"})
     public ChatWindow(String roomName, String host, int port, User user) {
-        super(roomName + " " + user.getScreenName());
+        super(roomName);
         initComponents();
 
         // Center the jframe in the screen

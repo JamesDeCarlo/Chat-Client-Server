@@ -312,7 +312,7 @@ public class PrimaryWindow extends JFrame implements ActionListener {
 
             // Check for blanks
             if (!Helper.validateInput(firstName) | !Helper.validateInput(lastName) | !Helper.validateInput(screenName)) {
-                this.showInputAlertMsgBox();
+                this.showAlertMsgBox("First Names, Last Name and Screen name can't\nbe empty no spaces and back slashes allowed");
                 this.prefPanel.getTxtFirstName().requestFocus();
             } else {
 
@@ -498,7 +498,7 @@ public class PrimaryWindow extends JFrame implements ActionListener {
     }
 
     private void showInputAlertMsgBox() {
-        JOptionPane.showMessageDialog(this, "All fields must be filled in and have no spaces.");
+        JOptionPane.showMessageDialog(this, "All fields must be filled in and have no spaces\nand no back slashes.");
     }
 
     private void showPassConfirmAlertMsgBox() {
