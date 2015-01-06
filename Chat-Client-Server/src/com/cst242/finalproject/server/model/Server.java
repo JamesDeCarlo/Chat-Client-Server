@@ -20,21 +20,18 @@ import java.util.logging.Logger;
  * @author James DeCarlo
  */
 public class Server implements WindowListener {
-
     private static final int PORT = 9090;
-
     private ServerSocket serverSocket;
-
     private List<ServerRoom> rooms;
     
-
     /**
      * Starts the server listening on port 9090 and creates four default chat 
      * rooms that increment in number starting with port 9091.
      * 
      * @param window The primary window for logging purposes.
      */
-    @SuppressWarnings({"CallToThreadStartDuringObjectConstruction", "LeakingThisInConstructor"})
+    @SuppressWarnings({"CallToThreadStartDuringObjectConstruction", 
+        "LeakingThisInConstructor"})
     public Server(PrimaryWindow window) {
         try {
             // add window listener to shutdown threads when closing
@@ -54,13 +51,15 @@ public class Server implements WindowListener {
 
             this.sleep();
 
-            ServerRoom room2 = new ServerRoom("Everything_Java", 9092, window);
+            ServerRoom room2 = new ServerRoom("Everything_Java", 9092, 
+                    window);
             room2.start();
             rooms.add(room2);
 
             this.sleep();
 
-            ServerRoom room3 = new ServerRoom("Computer_Science", 9093, window);
+            ServerRoom room3 = new ServerRoom("Computer_Science", 9093,
+                    window);
             room3.start();
             rooms.add(room3);
 
@@ -71,8 +70,10 @@ public class Server implements WindowListener {
             rooms.add(room4);
 
         } catch (IOException ex) {
-            window.appendLog("Server error exit and restart to try again:  %s%n", ex);
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            window.appendLog("Server error exit and restart to try again:  %s%n"
+                    , ex);
+            Logger.getLogger(Server.class.getName())
+                    .log(Level.SEVERE, null, ex);
             return;
         }
 
@@ -87,20 +88,17 @@ public class Server implements WindowListener {
             } catch (IOException ex) {
                 this.sleep();
                 window.appendLog("Failed to connect client: %s", new Date());
-                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Server.class.getName())
+                        .log(Level.SEVERE, null, ex);
             }
         }
-
     }
 
     @Override
-    public void windowOpened(WindowEvent e) {
-
-    }
+    public void windowOpened(WindowEvent e) {}
 
     @Override
     public void windowClosing(WindowEvent e) {
-
         // close chat rooms
         for (ServerRoom room : this.rooms) {
             room.shutDown();
@@ -111,35 +109,26 @@ public class Server implements WindowListener {
             try {
                 this.serverSocket.close();
             } catch (IOException ex) {
-                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Server.class.getName())
+                        .log(Level.SEVERE, null, ex);
             }
         }
     }
 
     @Override
-    public void windowClosed(WindowEvent e) {
-
-    }
+    public void windowClosed(WindowEvent e) {}
 
     @Override
-    public void windowIconified(WindowEvent e) {
-
-    }
+    public void windowIconified(WindowEvent e) {}
 
     @Override
-    public void windowDeiconified(WindowEvent e) {
-
-    }
+    public void windowDeiconified(WindowEvent e) {}
 
     @Override
-    public void windowActivated(WindowEvent e) {
-
-    }
+    public void windowActivated(WindowEvent e) {}
 
     @Override
-    public void windowDeactivated(WindowEvent e) {
-
-    }
+    public void windowDeactivated(WindowEvent e) {}
 
     private void sleep() {
         try {

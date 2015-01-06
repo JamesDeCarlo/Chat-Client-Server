@@ -18,8 +18,10 @@ public class PrimaryWindow extends JFrame {
 
     // Gui Constants
     private final static int JWIDTH = 800, JHEIGHT = 500;
-    private final static Dimension screenResolution = Toolkit.getDefaultToolkit().getScreenSize();
-    private final static int X = screenResolution.width / 2 - JWIDTH / 2, Y = screenResolution.height / 2 - JHEIGHT / 2;
+    private final static Dimension screenResolution = 
+            Toolkit.getDefaultToolkit().getScreenSize();
+    private final static int X = screenResolution.width / 2 - JWIDTH / 2, 
+            Y = screenResolution.height / 2 - JHEIGHT / 2;
 
     // Declare Gui parts
     private final JTextArea textLog;
@@ -48,7 +50,10 @@ public class PrimaryWindow extends JFrame {
         this.textLog = new JTextArea();
         this.textLog.setEditable(false);
         this.textLog.setLineWrap(true);
-        this.textLog.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), "Chat Server Log Window"));
+        this.textLog.setBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createEtchedBorder(EtchedBorder.RAISED), 
+                        "Chat Server Log Window"));
 
         JScrollPane jsp = new JScrollPane(this.textLog);
 
@@ -71,5 +76,4 @@ public class PrimaryWindow extends JFrame {
             this.textLog.setCaretPosition(textLog.getDocument().getLength());
         }
     }
-
 }

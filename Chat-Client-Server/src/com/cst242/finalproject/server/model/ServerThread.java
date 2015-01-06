@@ -33,7 +33,8 @@ public class ServerThread extends Thread {
      * @param window The primary window for logging purposes.
      * @param rooms The chat rooms list so we can add to it on client request.
      */
-    public ServerThread(Socket clientSocket, PrimaryWindow window, List<ServerRoom> rooms) {
+    public ServerThread(Socket clientSocket, PrimaryWindow window, 
+            List<ServerRoom> rooms) {
         this.clientSocket = clientSocket;
         this.window = window;
         this.rooms = rooms;
@@ -112,14 +113,18 @@ public class ServerThread extends Thread {
         FileIO fileIO = new FileIO();
 
         try {
-            if (request.length == 6 & fileIO.register(request[1], Integer.parseInt(request[2]), request[3], request[4], request[5])) {
-                window.appendLog("Registered new user %s : %s%n", request[1], new Date());
+            if (request.length == 6 & fileIO.register(request[1], 
+                    Integer.parseInt(request[2]), request[3], 
+                    request[4], request[5])) {
+                window.appendLog("Registered new user %s : %s%n", 
+                        request[1], new Date());
                 toClient.writeUTF("SUCCESS");
             } else {
                 toClient.writeUTF("FAILED");
             }
         } catch (IOException e) {
-            window.appendLog("Failed to send register status message to client: %s%n", new Date());
+            window.appendLog("Failed to send register status message to client:"
+                    + " %s%n", new Date());
         }
     }
 
@@ -134,7 +139,8 @@ public class ServerThread extends Thread {
             if (request.length != 3) {
                 toClient.writeUTF("FAILED");
             } else {
-                User user = fileIO.loginUser(request[1], Integer.parseInt(request[2]));
+                User user = fileIO.loginUser(request[1], 
+                        Integer.parseInt(request[2]));
 
                 if (user == null) {
                     toClient.writeUTF("FAILED");
@@ -151,12 +157,14 @@ public class ServerThread extends Thread {
 
                     toClient.writeUTF(retmsg.toString());
 
-                    window.appendLog("User '%s' loged in to the chat server: %s%n", user.getLoginId(), new Date());
+                    window.appendLog("User '%s' loged in to the chat server:"
+                            + " %s%n", user.getLoginId(), new Date());
                 }
                 toClient.flush();
             }
         } catch (IOException e) {
-            window.appendLog("Failed to send login message to client : %s%n", new Date());
+            window.appendLog("Failed to send login message to client : %s%n", 
+                    new Date());
         }
     }
     
@@ -168,7 +176,9 @@ public class ServerThread extends Thread {
     public void updateUser(String[] request){
         FileIO fileIO = new FileIO();
         try {
-            if(request.length == 6 & fileIO.updateUser(Integer.parseInt(request[1]), Integer.parseInt(request[2]), request[3], 
+            if(request.length == 6 & 
+                    fileIO.updateUser(Integer.parseInt(request[1]), 
+                            Integer.parseInt(request[2]), request[3], 
                     request[4], request[5])) {
                 
                     StringBuilder retmsg = new StringBuilder();
@@ -184,7 +194,8 @@ public class ServerThread extends Thread {
                     retmsg.append(request[5]);
                     toClient.writeUTF(retmsg.toString());
             }         
-            window.appendLog("User '%s' has been updated to the server: %s%n" , request[5], new Date());
+            window.appendLog("User '%s' has been updated to the server: %s%n", 
+                    request[5], new Date());
 
         } catch(IOException e){
             window.appendLog("Failed to update client: %s%n", new Date());            
@@ -206,17 +217,20 @@ public class ServerThread extends Thread {
             }
 
             for (ServerRoom room : this.rooms) {
-                String msg = String.format("ROOM %s %d", room.getRoomName(), room.getPort());
+                String msg = String.format("ROOM %s %d", room.getRoomName(), 
+                        room.getPort());
                 toClient.writeUTF(msg);
                 toClient.flush();
             }
 
             toClient.writeUTF("END");
             toClient.flush();
-            window.appendLog("Sent rooms list to User %s: %s%n", request[1], new Date());
+            window.appendLog("Sent rooms list to User %s: %s%n", request[1], 
+                    new Date());
 
         } catch (IOException e) {
-            window.appendLog("Failed to send room list to user %s: %s%n", request[1], new Date());
+            window.appendLog("Failed to send room list to user %s: %s%n", 
+                    request[1], new Date());
         }
     }
 
@@ -235,7 +249,8 @@ public class ServerThread extends Thread {
                 }
 
                 for (ServerRoom room : rooms) {
-                    if (room.getRoomName().toLowerCase().equals(request[1].toLowerCase())) {
+                    if (room.getRoomName().toLowerCase()
+                            .equals(request[1].toLowerCase())) {
                         toClient.writeUTF("FAILED");
                         toClient.flush();
                         return;
@@ -243,7 +258,8 @@ public class ServerThread extends Thread {
                 }
 
                 // room is unique create room and send success to client
-                ServerRoom room = new ServerRoom(request[1], rooms.get(rooms.size() - 1).getPort() + 1, window);
+                ServerRoom room = new ServerRoom(request[1], 
+                        rooms.get(rooms.size() - 1).getPort() + 1, window);
                 room.start();
 
                 this.sleep();
@@ -253,10 +269,12 @@ public class ServerThread extends Thread {
                 toClient.writeUTF("SUCCESS");
                 toClient.flush();
                 
-                window.appendLog("New room %s created by user %s: %s%n", request[1], request[2], new Date());
+                window.appendLog("New room %s created by user %s: %s%n", 
+                        request[1], request[2], new Date());
 
             } catch (IOException e) {
-                window.appendLog("Failed to send create room message: %s%n", new Date());
+                window.appendLog("Failed to send create room message: %s%n", 
+                        new Date());
             }
         }
     }
@@ -265,7 +283,8 @@ public class ServerThread extends Thread {
         try {
             Thread.sleep(100);
         } catch (InterruptedException ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServerThread.class.getName())
+                    .log(Level.SEVERE, null, ex);
         }
     }
 }

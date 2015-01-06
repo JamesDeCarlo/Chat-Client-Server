@@ -71,7 +71,8 @@ public class ServerRoom extends Thread {
 
         try {
             for (;;) {
-                new ServerRoomThread(window, serverSocket.accept(),this.streams, roomName).start();
+                new ServerRoomThread(window, serverSocket.accept(),
+                        this.streams, roomName).start();
             }
         } catch (IOException ex) {
             // do nothing let the thread die
@@ -87,7 +88,8 @@ public class ServerRoom extends Thread {
                 this.serverSocket.close();
             }
         } catch (IOException ex) {
-            Logger.getLogger(ServerRoom.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServerRoom.class.getName())
+                    .log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -25,7 +25,8 @@ public class User implements Serializable {
      * @param lastName User last name not null
      * @param screenName User screen name not null
      */
-    public User(int accountNumber, String loginId, int hashedPassword, String firstName, String lastName, String screenName) {
+    public User(int accountNumber, String loginId, int hashedPassword, 
+            String firstName, String lastName, String screenName) {
         this.accountNumber = accountNumber;
         this.loginId = loginId;
         this.hashedPassword = hashedPassword;
@@ -160,7 +161,5 @@ public class User implements Serializable {
         b.append(this.screenName);
         b.append("\n");
         return b.toString();
-    }
-    
-    
+    }        
 }

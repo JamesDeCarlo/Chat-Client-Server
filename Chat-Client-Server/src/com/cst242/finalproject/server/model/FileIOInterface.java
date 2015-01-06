@@ -50,6 +50,5 @@ public interface FileIOInterface {
      * @return Returns true if updated successfully otherwise false;
      */
     public boolean updateUser(int accountNumber, int hashedPassword, 
-            String firstName, String lastName, String screenName);
-    
+            String firstName, String lastName, String screenName);    
 }

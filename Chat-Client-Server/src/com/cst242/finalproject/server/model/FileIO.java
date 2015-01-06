@@ -14,16 +14,13 @@ import java.util.List;
  * documentation.
  *
  * @author James DeCarlo
+ * @author Evan Esatto
  */
-public class FileIO implements FileIOInterface {
-
-    BufferedReader reader;
-    PrintWriter writer;
-
-    int accountNumber;
-
+public class FileIO implements FileIOInterface {    
+    
     @Override
-    public boolean register(String loginId, int hashedPassword, String firstName, String lastName, String screenName) {
+    public boolean register(String loginId, int hashedPassword, 
+            String firstName, String lastName, String screenName) {
         synchronized (this) {
             File file = new File("userlist.dat");
 
@@ -37,11 +34,12 @@ public class FileIO implements FileIOInterface {
 
             if (file.length() == 0) {
                 try {
-                    writer = new PrintWriter(file);
+                    PrintWriter writer = new PrintWriter(file);
 
-                    accountNumber = 1001;
+                    int accountNumber = 1001;
 
-                    User user = new User(accountNumber, loginId, hashedPassword, firstName, lastName, screenName);
+                    User user = new User(accountNumber, loginId, hashedPassword,
+                            firstName, lastName, screenName);
 
                     //Writing the User object to the file.
                     writer.println(user.toString());
@@ -53,6 +51,7 @@ public class FileIO implements FileIOInterface {
                 }
 
             } else {
+                BufferedReader reader;
                 try {
                     reader = new BufferedReader(new FileReader(file));
                 } catch (IOException e) {
@@ -75,7 +74,7 @@ public class FileIO implements FileIOInterface {
                 }
 
                 // check if login id is unique and find max account number index
-                accountNumber = 1000;
+                int accountNumber = 1000;
 
                 for (User u : users) {
                     if (u.getAccountNumber() > accountNumber) {
@@ -88,9 +87,11 @@ public class FileIO implements FileIOInterface {
 
                 // all went well create user and add to list array
                 accountNumber++;
-                User user = new User(accountNumber, loginId, hashedPassword, firstName, lastName, screenName);
+                User user = new User(accountNumber, loginId, hashedPassword, 
+                        firstName, lastName, screenName);
                 users.add(user);
-
+                
+                PrintWriter writer;
                 try {
                     writer = new PrintWriter(file);
                 } catch (FileNotFoundException ex) {
@@ -101,9 +102,8 @@ public class FileIO implements FileIOInterface {
                     writer.append(u.toString());
                     writer.flush();
                 }
-
+                
                 writer.close();
-
             }
             return true;
         }
@@ -113,7 +113,6 @@ public class FileIO implements FileIOInterface {
     public User loginUser(String loginId, int hashedPassword) {
         synchronized (this) {
             User loginUser;
-
             File file = new File("userList.dat");
 
             if (!file.exists()) {
@@ -124,6 +123,7 @@ public class FileIO implements FileIOInterface {
                 return null;
             } 
             else {
+                BufferedReader reader;
                 try {
                     reader = new BufferedReader(new FileReader(file));
                 } catch (IOException e) {
@@ -131,7 +131,6 @@ public class FileIO implements FileIOInterface {
                 }
 
                 List<User> users = new ArrayList<>();
-
                 String line = "";
 
                 try {
@@ -140,7 +139,6 @@ public class FileIO implements FileIOInterface {
                             User u = new User(line.trim());
                             users.add(u);
                         }
-
                     }
                     reader.close();
                 } catch (IOException e) {
@@ -152,17 +150,16 @@ public class FileIO implements FileIOInterface {
                             && u.getHashedPassword() == hashedPassword) {
                         return u;
                     }
-
                 }
             }
-
             return null;
         }
     }
 
     @Override
-    public boolean updateUser(int accountNumber, int hashedPassword, String firstName, String lastName, String screenName
-    ) {
+    public boolean updateUser(int accountNumber, int hashedPassword, 
+            String firstName, String lastName, String screenName){
+        
         synchronized (this) {
 
             File file = new File("userList.dat");
@@ -175,6 +172,7 @@ public class FileIO implements FileIOInterface {
                 return false;
             } 
             else {
+                BufferedReader reader;
                 try {
                     reader = new BufferedReader(new FileReader(file));
                 } catch (IOException e) {
@@ -207,6 +205,7 @@ public class FileIO implements FileIOInterface {
                     }
                 }
 
+                PrintWriter writer;
                 try {
                     writer = new PrintWriter(file);
                 } catch (IOException e) {
@@ -223,5 +222,4 @@ public class FileIO implements FileIOInterface {
             }
         }
     }
-
 }

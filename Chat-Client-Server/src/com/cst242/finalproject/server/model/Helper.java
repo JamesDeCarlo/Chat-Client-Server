@@ -24,9 +24,7 @@ public class Helper {
             if(Character.isWhitespace(str.charAt(i))){
                 return false;
             }
-        }
-        
-        
+        }                
         return true;
     }
     
